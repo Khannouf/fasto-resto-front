@@ -1,7 +1,15 @@
 import { useState } from 'react'
 import { MapPin, Package, ShoppingCart } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
 
 function FirstStep() {
+    const location = useLocation();
+    const idRestoUrl = location.pathname.split('/')    
+    const idResto = idRestoUrl[2];
+    
+    
+
+
 
     return (
         <>
@@ -13,19 +21,24 @@ function FirstStep() {
             <div className='bg-[#D9D9D9] w-80 h-64 fixed top-[25%] left-1/2 transform -translate-x-1/2 flex items-center justify-center p-4 rounded-lg'>
                 <p className='text-sm text-center'>Description</p>
             </div>
+            <Link to={location.pathname + "/menu"} className='text-black' onClick={() => (localStorage.setItem("locationEat", "on site"))}>
 
-            <button
-                className='bg-[#FAFAFA] w-80 h-24 fixed top-[57%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg'
-            >
-                <MapPin size={50} className='text-red-500'/>
-                <span className='text-2xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2'>Sur place</span>
-            </button>
-            <button
-                className='bg-[#FAFAFA] w-80 h-24 fixed top-[70%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg'
-            >
-                <Package size={50} className='text-red-500'/>
-                <span className='text-2xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2'>A emporter</span>
-            </button>
+                <button
+                    className='bg-[#FAFAFA] w-80 h-24 fixed top-[57%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg'
+                >
+                    <MapPin size={50} className='text-red-500' />
+                    <span className='text-2xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2'>Sur place</span>
+                </button>
+            </Link>
+            <Link to={location.pathname + "/menu"} className='text-black' onClick={() => (localStorage.setItem("locationEat", "take away"))}>
+
+                <button
+                    className='bg-[#FAFAFA] w-80 h-24 fixed top-[70%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg'
+                >
+                    <Package size={50} className='text-red-500' />
+                    <span className='text-2xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2'>A emporter</span>
+                </button>
+            </Link>
         </>
     )
 }
