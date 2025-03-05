@@ -9,12 +9,18 @@ type CardItemProps = {
     description: string;
     price: number
     categorieId: number;
+    ingredients: Ingredients[]
 };
 
-function CardItem({ idResto, idElement, imageUrl, name, description, price, categorieId }: CardItemProps) {
+type Ingredients = {
+    ingredientId: number;
+    quantity: string
+}
+
+function CardItem({ idResto, idElement, imageUrl, name, description, price}: CardItemProps) {
 
     return (
-        <Link to={`/restaurant/${idResto}/detail`}>
+        <Link to={`/restaurant/${idResto}/${idElement}`}>
             <Card className="w-full max-w-3xl h-40 flex items-center p-4 shadow-md">
                 {/* Image à gauche */}
                 <div className="w-24 h-24 bg-gray-200 rounded-md overflow-hidden">

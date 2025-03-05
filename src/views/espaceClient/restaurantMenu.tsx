@@ -10,6 +10,7 @@ function RestaurantMenu() {
     const params = useParams()
 
 
+    //remplacer par appelle a api
     const categories = [
         { id: 1, name: "Plats" },
         { id: 2, name: "Boissons" },
@@ -18,6 +19,8 @@ function RestaurantMenu() {
         { id: 5, name: "salades" },
         { id: 6, name: "Viandes" }
     ];
+
+    //remplacer par appelle a api
     const items = [
         {
             id: 1,
@@ -27,8 +30,8 @@ function RestaurantMenu() {
             categorieid: 1,
             price: 9.99,
             ingredients: [
-                { ingredientId: 1, quantity: 100 }, // Exemple de DishIngredientDto
-                { ingredientId: 2, quantity: 150 }
+                { ingredientId: 1, quantity: '1' }, // Exemple de DishIngredientDto
+                { ingredientId: 2, quantity: '2' }
             ]
         },
         {
@@ -39,8 +42,8 @@ function RestaurantMenu() {
             categorieid: 2,
             price: 12.5,
             ingredients: [
-                { ingredientId: 3, quantity: 200 },
-                { ingredientId: 4, quantity: 50 }
+                { ingredientId: 3, quantity: '1' },
+                { ingredientId: 4, quantity: '1' }
             ]
         },
         {
@@ -51,8 +54,8 @@ function RestaurantMenu() {
             categorieid: 3,
             price: 8.75,
             ingredients: [
-                { ingredientId: 5, quantity: 120 },
-                { ingredientId: 6, quantity: 30 }
+                { ingredientId: 5, quantity: '2' },
+                { ingredientId: 6, quantity: '3' }
             ]
         },
         {
@@ -63,8 +66,8 @@ function RestaurantMenu() {
             categorieid: 1,
             price: 9.99,
             ingredients: [
-                { ingredientId: 1, quantity: 100 }, // Exemple de DishIngredientDto
-                { ingredientId: 2, quantity: 150 }
+                { ingredientId: 1, quantity: '2' }, // Exemple de DishIngredientDto
+                { ingredientId: 2, quantity: '1' }
             ]
         },
     ];
@@ -85,7 +88,7 @@ function RestaurantMenu() {
                 <Link to={`/restaurant/${params.idResto}`} className='text-black'>
                     <ArrowLeft className='ml-5' />
                 </Link>
-                <p className="text-xl font-bold ml-5 mb-1">nom restaurant</p>
+                <p className="text-xl font-bold ml-5 mb-1">Nom Restaurant</p>
             </div>
 
             <div className='w-full h-16 fixed top-12 flex items-center justify-start bg-white'>
@@ -121,6 +124,7 @@ function RestaurantMenu() {
                                     description={item.description}
                                     price={item.price}
                                     categorieId={item.categorieid}
+                                    ingredients={item.ingredients}
                                 />
                             ))
                         ) : (

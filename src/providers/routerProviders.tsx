@@ -5,6 +5,7 @@ import LayoutSidebar from "../components/sidebar/layoutSidebar";
 import LayoutWithBottomBar from "../components/bottomBar/layoutBottomBar";
 import FirstStep from "../views/espaceClient/firstStep";
 import RestaurantMenu from "../views/espaceClient/restaurantMenu";
+import DetailDish from "../views/espaceClient/detailDish";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -19,7 +20,7 @@ const AppContent: React.FC = () => {
         <Routes>
           <Route path="/restaurant/:idResto" element={<FirstStep />} />
           <Route path="/restaurant/:idResto/menu" element={<RestaurantMenu />} />
-          <Route path="/restaurant/:idResto/:idelement" element={<RestaurantMenu />} />
+          <Route path="/restaurant/:idResto/:idElement" element={<DetailDish />} />
         </Routes>
       </LayoutWithBottomBar>
     );
