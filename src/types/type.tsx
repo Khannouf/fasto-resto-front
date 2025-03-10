@@ -1,11 +1,99 @@
-// Types pour les ingrédients
-export type Ingredient = {
+export interface Image {
+    id: number;
+    filename?: string; // Présent dans "imageRestaurant"
+    imagePath?: string; // Présent dans "img"
+    restaurantId: number;
+}
+
+export interface Restaurant {
+    restaurantName: string;
+    description: string;
+    location: string;
+    phone: string;
+    imageRestaurant: Image[]; // Liste des images sous "imageRestaurant"
+    img: Image[]; // Liste des images sous "img"
+}
+
+export interface ApiResponseRestaurant {
+    type: string;
+    data: Restaurant;
+}
+
+export interface Categorie {
+    id: number;
+    name: string;
+}
+
+export interface ApiResponseCategorie {
+    type: string;
+    data: Categorie
+}
+export interface Ingredient {
+    id: number;
+    name: string;
+}
+
+export interface DishIngredient {
+    dishId: number;
     ingredientId: number;
     quantity: string;
+    ingredient: Ingredient;
+}
+
+export interface DishImage {
+    id: number;
+    filename: string;
+    dishId: number;
+}
+
+export interface DishImagePath {
+    id: number;
+    imagePath: string;
+    dishId: number;
+}
+
+export interface Dish {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    categorieId: number;
+    restaurantId: number;
+    dishIngredients: DishIngredient[];
+    imageDish: DishImage[];
+    img: DishImagePath[]; // Liste des images avec URL complète
+}
+
+export interface ApiResponseDish {
+    type: string;
+    data: Dish;
+}
+
+export interface Order {
+    sequentialId: number;
+    total: number;
+    state: string;
+    tableId: number;
+    orderJoin: {
+        menu: Menu[] | []; // Peut être un tableau de Menu ou vide
+        dish: Dish[] | []; // Peut être un tableau de Dish ou vide
+    };
 };
 
-// Types pour un plat (Dish)
-export type Dish = {
+export interface Menu {
+    id: number;
+    name: string;
+    price: number;
+    nbelement: number;
+    dish: MenuDish[];
+};
+
+export interface MenuDish {
+    dishId: number;
+    configuration: number;
+};
+
+export interface Dish {
     id: number;
     name: string;
     categorieid: number;
@@ -13,30 +101,17 @@ export type Dish = {
     nbelement: number;
 };
 
-// Types pour les éléments de menu (MenuDish)
-export type MenuDish = {
-    dishId: number;
-    configuration: number;
-};
-
-// Types pour un menu
-export type Menu = {
-    id: number;
-    name: string;
-    price: number;
-    dish: MenuDish[];
-    nbelement: number;
-};
-
-// Type pour un panier
-export type Cart = {
-    dishes: Dish[];
+export interface CartState {
     menus: Menu[];
-};
+    dishes: Dish[];
+    total: number;
+}
 
-// Actions possibles sur le panier
-export type CartAction =
-    | { type: "ADD_DISH"; dish: Dish }
-    | { type: "REMOVE_DISH"; dishId: number }
-    | { type: "ADD_MENU"; menu: Menu }
-    | { type: "REMOVE_MENU"; menuId: number };
+export interface CartContextType extends CartState {
+    addDish: (dish: Dish) => void;
+    removeDish: (dishId: number) => void;
+    addMenu: (menu: Menu) => void;
+    removeMenu: (menuId: number) => void;
+}
+
+

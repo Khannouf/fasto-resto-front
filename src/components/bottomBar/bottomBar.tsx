@@ -1,8 +1,22 @@
-import { ShoppingCart } from "lucide-react";
+import { Check, ShoppingCart, Trash } from "lucide-react";
 import React, { useState } from "react";
+import { useCart } from "../../context/cartContext";
+import { ScrollArea } from "../ui/scroll-area";
+import { Separator } from "../ui/separator";
+import { Link, useParams } from "react-router-dom";
 
 const BottomBar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { dishes, menus, removeDish, total } = useCart();
+  const params = useParams();
+  console.log(params);
+  
+  
+
+  const handleButton = () => {
+    setIsExpanded(!isExpanded);
+    console.log(dishes);
+  };
 
   return (
     <div
@@ -10,14 +24,15 @@ const BottomBar: React.FC = () => {
         ${isExpanded ? "h-[80vh]" : "h-14"}
         w-full bg-[#FFD5D5] flex items-center justify-center shadow-md transition-all duration-500 ease-in-out`}
     >
-      <div  
+      <div
         className={`bg-[#FFD5D5] 
           ${isExpanded ? "w-60 h-[95vh] rounded-full" : "w-36 h-40 rounded-full"} 
           flex items-center justify-center transition-all duration-500 ease-in-out`}
       >
+
         <button
-          className={`bg-[#FFD5D5] ${isExpanded ? " mb-[80vh]" : " mb-14"}  transition-all duration-500 ease-in-out`}
-          onClick={() => setIsExpanded(!isExpanded)}
+          className={`bg-[#FFD5D5] ${isExpanded ? "mb-[80vh]" : "mb-14"} transition-all duration-500 ease-in-out`}
+          onClick={handleButton}
         >
           <ShoppingCart size={50} />
         </button>
@@ -25,8 +40,50 @@ const BottomBar: React.FC = () => {
 
       {/* La div blanche avec animation pour son affichage */}
       {isExpanded && (
-        <div className="absolute bg-white w-[70vw] h-[65vh] flex justify-center items-center top-1/2 transform -translate-y-1/2 opacity-1 transition-opacity duration-500 ease-in-out animate-fade-in">
-          <p>Contenu supplémentaire ici</p>
+        <div className="absolute bg-white w-[90vw] h-[65vh] flex flex-col justify-center items-center top-1/2 transform -translate-y-1/2 opacity-1 transition-opacity duration-500 ease-in-out animate-fade-in pl-4 pr-4">
+          {dishes.length > 0 || menus.length > 0 ? (
+            <>
+              {/* Affichage des `id` des plats */}
+              <ScrollArea className="w-full h-[50vh] overflow-auto p-2">
+
+                <div className="w-full text-center">
+                  {dishes.map((dish, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border-b border-gray-300">
+                      {/* Image */}
+                      <img
+                        src={dish.img[0]?.imagePath}  // Utilise l'URL de l'image du plat
+                        alt={dish.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+
+                      {/* Titre et prix */}
+                      <div className="flex flex-col ml-4">
+                        <span className="text-lg font-semibold">{dish.name}</span>
+                        <span className="text-md text-gray-500">{dish.price} €</span>
+                      </div>
+
+                      {/* Plat ID */}
+                      <button className="text-sm text-red-500 bg-inherit" onClick={() => (removeDish(dish.id))}><Trash /></button>
+                    </div>
+                  ))}
+                </div>
+
+              </ScrollArea>
+              <Separator />
+              <div className="w-full justify-end items-end text-end">
+                <div className="h-10 text-2xl font-bold mt-4 mr-4">{total} €</div>
+                <Link to={`/restaurant/${params.idResto}/recapBeforeOrder`} onClick={() => (setIsExpanded(!isExpanded))}>
+                  <button className="w-full text-white font-semibold flex items-center justify-center gap-x-2">
+                    <Check /> Commander
+                  </button>
+
+                </Link>
+
+              </div>
+            </>
+          ) : (
+            <p>Panier vide</p>
+          )}
         </div>
       )}
     </div>

@@ -39,9 +39,6 @@ function CardItem({ idResto, idElement, imageUrl, name, description, price}: Car
                     </p>
                 </CardContent>
                 <h2 className="text-lg font-semibold"> {price}</h2>
-                {/* <button type="button" onClick={handleButtonClick} className="bg-green-400 font-medium rounded-full text-lg p-2.5 text-center inline-flex items-center">
-                    <CirclePlusIcon size={30} />
-                </button> */}
             </Card>
         </Link>
     )
