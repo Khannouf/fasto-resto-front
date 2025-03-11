@@ -12,11 +12,12 @@ import { RecapBeforeOrder } from "../views/espaceClient/recapBeforeOrder";
 const AppContent: React.FC = () => {
   const location = useLocation();
   const user = true; // récupérer le contexte utilisateur
-  const admin = true;
+  const admin = false;
 
 
   const isRestaurantRoute = location.pathname.startsWith("/restaurant");
-  const isRestaurantRouteOrder = location.pathname.startsWith("/order/restaurant");
+  const isRestaurantRouteOrder = location.pathname.startsWith("/order");
+
 
   if (isRestaurantRoute) {
     return (
@@ -27,11 +28,18 @@ const AppContent: React.FC = () => {
             <Route path="/restaurant/:idResto" element={<FirstStep />} />
             <Route path="/restaurant/:idResto/menu" element={<RestaurantMenu />} />
             <Route path="/restaurant/:idResto/:idElement" element={<DetailDish />} />
-            <Route path="/restaurant/:idResto/recapBeforeOrder" element={<RecapBeforeOrder />} />
           </Routes>
         </LayoutWithBottomBar>
       </>
     );
+  }
+
+  if (isRestaurantRouteOrder) {
+    return (
+      <Routes>
+        <Route path="/order/:idResto/recapBeforeOrder" element={<RecapBeforeOrder />} />
+      </Routes>
+    )
   }
 
   if (admin) {

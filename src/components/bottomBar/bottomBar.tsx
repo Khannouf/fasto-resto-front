@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { useCart } from "../../context/cartContext";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 const BottomBar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { dishes, menus, removeDish, total } = useCart();
-  const params = useParams();
-  console.log(params);
+  const location = useLocation();
+  const idRestoUrl = location.pathname.split('/')    
+  const idResto = idRestoUrl[2];
   
   
 
@@ -72,7 +73,7 @@ const BottomBar: React.FC = () => {
               <Separator />
               <div className="w-full justify-end items-end text-end">
                 <div className="h-10 text-2xl font-bold mt-4 mr-4">{total} €</div>
-                <Link to={`/restaurant/${params.idResto}/recapBeforeOrder`} onClick={() => (setIsExpanded(!isExpanded))}>
+                <Link to={`/order/${idResto}/recapBeforeOrder`} onClick={() => (setIsExpanded(!isExpanded))}>
                   <button className="w-full text-white font-semibold flex items-center justify-center gap-x-2">
                     <Check /> Commander
                   </button>
