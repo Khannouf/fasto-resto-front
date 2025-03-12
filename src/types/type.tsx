@@ -93,21 +93,21 @@ export interface MenuDish {
     configuration: number;
 };
 
-export interface Dish {
-    id: number;
-    name: string;
-    categorieid: number;
-    price: number;
-    nbelement: number;
+export interface DishCartContext {
+    dish: Dish
+    nbElement: number;
+    quantity: number
 };
 
 export interface CartState {
     menus: Menu[];
-    dishes: Dish[];
+    dishes: DishCartContext[];
+    comment: string;
     total: number;
 }
 
 export interface CartContextType extends CartState {
+    addComment: (comment: string) => void;
     addDish: (dish: Dish) => void;
     removeDish: (dishId: number) => void;
     addMenu: (menu: Menu) => void;

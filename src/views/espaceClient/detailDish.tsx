@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { useCart } from "../../context/cartContext";
@@ -8,12 +8,13 @@ import pizzaImg from "../../assets/pizza.jpg"; // Image par défaut
 
 const DetailDish = () => {
     const { addDish, dishes } = useCart();
+    const [comment, setComment] = useState("");
     const params = useParams();
     console.log(params);
     
 
     const item: Dish = {
-        id: 1,
+        id: 10,
         name: "Pizza 4 formaggio",
         description: "Pizza traditionnelle avec sauce tomate, mozzarella et basilic.",
         price: 9.99,
@@ -47,12 +48,13 @@ const DetailDish = () => {
                 dishId: 1
             }
         ],
-        nbelement: 0,
-        categorieid: 0
     };
 
     const handleButton = () => {
+        
         addDish(item);
+        setComment('')
+
     };
 
     return (
@@ -102,6 +104,7 @@ const DetailDish = () => {
                         name="comment"
                         className="w-full bg-gray-200 rounded-xl p-2"
                         placeholder="Ajouter des instructions ou préférences..."
+                        onChange={(event) => setComment(event.target.value)}
                     />
                 </div>
 

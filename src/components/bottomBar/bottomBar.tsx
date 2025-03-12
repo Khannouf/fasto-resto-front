@@ -16,7 +16,7 @@ const BottomBar: React.FC = () => {
 
   const handleButton = () => {
     setIsExpanded(!isExpanded);
-    console.log(dishes);
+    console.log("dishes: " + dishes);
   };
 
   return (
@@ -48,23 +48,23 @@ const BottomBar: React.FC = () => {
               <ScrollArea className="w-full h-[50vh] overflow-auto p-2">
 
                 <div className="w-full text-center">
-                  {dishes.map((dish, index) => (
+                  {dishes.map((dishContext, index) => (
                     <div key={index} className="flex items-center justify-between p-4 border-b border-gray-300">
                       {/* Image */}
                       <img
-                        src={dish.img[0]?.imagePath}  // Utilise l'URL de l'image du plat
-                        alt={dish.name}
+                        src={dishContext.dish.img[0]?.imagePath}  // Utilise l'URL de l'image du plat
+                        alt={dishContext.dish.name}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
 
                       {/* Titre et prix */}
                       <div className="flex flex-col ml-4">
-                        <span className="text-lg font-semibold">{dish.name}</span>
-                        <span className="text-md text-gray-500">{dish.price} €</span>
+                        <span className="text-lg font-semibold">{dishContext.dish.name}</span>
+                        <span className="text-md text-gray-500"> {dishContext.quantity} x {dishContext.dish.price} €</span>
                       </div>
 
                       {/* Plat ID */}
-                      <button className="text-sm text-red-500 bg-inherit" onClick={() => (removeDish(dish.id))}><Trash /></button>
+                      <button className="text-sm text-red-500 bg-inherit" onClick={() => (removeDish(index))}><Trash /></button>
                     </div>
                   ))}
                 </div>

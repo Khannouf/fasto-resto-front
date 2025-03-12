@@ -39,7 +39,7 @@ function RestaurantMenu() {
             imageUrl: "https://via.placeholder.com/150",
             name: "Burger Classique",
             description: "Burger avec steak haché, cheddar, salade et tomate.",
-            categorieid: 2,
+            categorieid: 1,
             price: 12.5,
             ingredients: [
                 { ingredientId: 3, quantity: '1' },
@@ -51,7 +51,7 @@ function RestaurantMenu() {
             imageUrl: "https://via.placeholder.com/150",
             name: "Salade César",
             description: "Salade avec poulet grillé, parmesan et croûtons.",
-            categorieid: 3,
+            categorieid: 5,
             price: 8.75,
             ingredients: [
                 { ingredientId: 5, quantity: '2' },
