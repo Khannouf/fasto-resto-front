@@ -17,7 +17,6 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     switch (action.type) {
         case "ADD_COMMENT":{
             const comment = action.payload;
-            
             return {
                 ...state,
                 comment: comment
