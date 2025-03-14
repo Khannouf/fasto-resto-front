@@ -1,19 +1,40 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { Categorie } from "../../types/type"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
+import { Categorie } from "../../../types/type"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu"
+import { Button } from "../../ui/button"
 import { MoreHorizontal, Trash } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 
 
 
 export const columns = (deleteCategory: (id: number) => void): ColumnDef<Categorie>[] => [
     {
         accessorKey: "id",
-        header: "Id",
+        header: ({ column }) => {
+            return (
+                <button
+                    className="bg-white text-black flex flex-row"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Id
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </button>
+            )
+        },
     },
     {
         accessorKey: "name",
-        header: "Nom",
+        header: ({ column }) => {
+            return (
+                <button
+                    className="bg-white text-black flex flex-row"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Nom
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </button>
+            )
+        },
     },
     {
         id: "action",

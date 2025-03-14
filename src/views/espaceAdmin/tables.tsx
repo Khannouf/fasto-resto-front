@@ -1,37 +1,38 @@
 import React, { useState } from 'react';
-import { Categorie } from '../../types/type';
+import { Categorie, TablesRestaurant } from '../../types/type';
 import { CirclePlus } from 'lucide-react';
 import { CardCategory } from '../../components/cardCategory';
 import { DataTable } from '../../components/ui/data-table';
-import { columns } from '../../components/table/tableCategory/columns';
+import { columns } from '../../components/table/tableTableRestaurant/columns';
+import QRCodeGenerator from '../../components/qrCodeGenerator';
 
-export const Category = () => {
+export const TablesView = () => {
     const [showCard, setShowCard] = useState(false);
     const [pageSize, setPageSize] = useState(10);
-    const [categories, setCategories] = useState<Categorie[]>([
-        { id: 1, name: "Plats" },
-        { id: 2, name: "Boissons" },
-        { id: 3, name: "Desserts" },
-        { id: 4, name: "Tex-Mex" },
-        { id: 5, name: "Salades" },
-        { id: 6, name: "Viandes" },
-        { id: 7, name: "Fruits" },
-        { id: 8, name: "Soupes" },
-        { id: 9, name: "Poissons" },
-        { id: 10, name: "Pâtes" },
-        { id: 11, name: "Fast Food" },
-        { id: 12, name: "Asiatique" },
+    const [tables, setTables] = useState<TablesRestaurant[]>([
+        { id: 1, numeroTable: "5" },
+        { id: 2, numeroTable: "23" },
+        { id: 3, numeroTable: "24" },
+        { id: 4, numeroTable: "25" },
+        { id: 5, numeroTable: "26" },
+        { id: 6, numeroTable: "27" },
+        { id: 7, numeroTable: "28" },
+        { id: 8, numeroTable: "28" },
+        { id: 9, numeroTable: "29" },
+        { id: 10, numeroTable: "30" },
+        { id: 11, numeroTable: "31" },
+        { id: 12, numeroTable: "31" },
     ]);
 
     const deleteCategory = (id: number) => {
-        setCategories((prev) => prev.filter(category => category.id !== id));
+        setTables((prev) => prev.filter(tables => tables.id !== id));
     };
 
     return (
         <>
             <div className="h-screen flex flex-col w-[80vw]">
                 <h1 className="ml-5 mt-5 mb-3 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-3xl">
-                    Catégorie
+                    Tables
                 </h1>
                 <div className="w-full flex flex-col md:flex-row md:justify-between items-start md:items-center px-5 gap-2 mb-3">
                     <button
@@ -39,7 +40,7 @@ export const Category = () => {
                         onClick={() => setShowCard(true)}
                     >
                         <CirclePlus />
-                        Nouvelle catégorie
+                        Nouvelle tables
                     </button>
                     <div className="flex items-center">
                         <label className="text-sm font-medium text-gray-700 mr-2">Afficher</label>
@@ -60,9 +61,10 @@ export const Category = () => {
 
                 {/* Table */}
                 <div className="ml-5 rounded-lg bg-[#ffffff] flex-1 p-5 lg:w-[90vw] md:w-[50vw]">
-                    <DataTable columns={columns(deleteCategory)} data={categories} pageSize={pageSize} />
+                    <DataTable columns={columns(deleteCategory)} data={tables} pageSize={pageSize} />
                 </div>
             </div>
+            <QRCodeGenerator idResto={1} tableId={1} />
 
             {showCard && <CardCategory onClose={() => setShowCard(false)} />}
         </>

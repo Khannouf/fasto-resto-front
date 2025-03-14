@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { CalendarClock, ChefHat, CookingPot, FileStack, Home, LayoutDashboard, Utensils, UtensilsCrossed } from "lucide-react"
 import {
+  useSidebar,
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -26,11 +27,13 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const { open } = useSidebar(); // Récupère l'état de la sidebar
+  
+
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -64,7 +67,7 @@ const HoverableLink = ({ item }: { item: { title: string; url: string; icon: Rea
           animate={isHovered ? { scale: 1.3, rotate: 10 } : { scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
-          <item.icon className="w-6 h-6" />
+          <item.icon className="w-6 h-6 mr-2" />
         </motion.div>
         <span>{item.title}</span>
       </Link>

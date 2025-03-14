@@ -8,6 +8,7 @@ import RestaurantMenu from "../views/espaceClient/restaurantMenu";
 import DetailDish from "../views/espaceClient/detailDish";
 import { RecapBeforeOrder } from "../views/espaceClient/recapBeforeOrder";
 import { Category } from "../views/espaceAdmin/category";
+import { TablesView } from "../views/espaceAdmin/tables";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -51,6 +52,7 @@ const AppContent: React.FC = () => {
           <Routes>
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/categories" element={<Category />} />
+            <Route path="/admin/tables" element={<TablesView />} />
           </Routes>
         </LayoutSidebar>
       </>
