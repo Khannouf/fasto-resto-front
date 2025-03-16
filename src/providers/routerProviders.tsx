@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, useParams } from "react-router-dom";
-import Dashboard from "../views/dashboard";
+import Dashboard from "../views/espaceAdmin/dashboard";
 import React from "react";
 import LayoutSidebar from "../components/sidebar/layoutSidebar";
 import LayoutWithBottomBar from "../components/bottomBar/layoutBottomBar";
@@ -7,12 +7,13 @@ import FirstStep from "../views/espaceClient/firstStep";
 import RestaurantMenu from "../views/espaceClient/restaurantMenu";
 import DetailDish from "../views/espaceClient/detailDish";
 import { RecapBeforeOrder } from "../views/espaceClient/recapBeforeOrder";
+import { Category } from "../views/espaceAdmin/category";
+import { TablesView } from "../views/espaceAdmin/tables";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
   const location = useLocation();
   const user = true; // récupérer le contexte utilisateur
-  const admin = false;
 
 
   const isRestaurantRoute = location.pathname.startsWith("/restaurant");
@@ -42,23 +43,18 @@ const AppContent: React.FC = () => {
     )
   }
 
-  if (admin) {
+  if (user) {
+
 
     return (
       <>
-        {user ? (
-          <LayoutSidebar>
-            <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Routes>
-          </LayoutSidebar>
-        ) : (
-          <LayoutSidebar>
-            <Routes>
-              <Route path="/dashboard2" element={<Dashboard />} />
-            </Routes>
-          </LayoutSidebar>
-        )}
+        <LayoutSidebar>
+          <Routes>
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/categories" element={<Category />} />
+            <Route path="/admin/tables" element={<TablesView />} />
+          </Routes>
+        </LayoutSidebar>
       </>
     );
   }
