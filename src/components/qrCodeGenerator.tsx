@@ -1,12 +1,15 @@
 import React from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { useParams } from "react-router-dom";
 
-const QRCodeGenerator = ({ idResto, tableId }: { idResto: number; tableId: number }) => {
-    const url = `http://localhost:5173/restaurant/${idResto}?tableId=${tableId}`;
+const QRCodeGenerator = () => {
+
+    const params = useParams()
+    const url = `http://localhost:5173/restaurant/${params.idResto}?tableId=${params.numTable}`;
 
     return (
         <div className="flex flex-col items-center gap-3">
-            <p className="text-lg font-semibold">Table {tableId}</p>
+            <p className="text-lg font-semibold">Table {params.numTable}</p>
             <QRCodeSVG value={url} size={150} />
         </div>
     );

@@ -9,6 +9,7 @@ import DetailDish from "../views/espaceClient/detailDish";
 import { RecapBeforeOrder } from "../views/espaceClient/recapBeforeOrder";
 import { Category } from "../views/espaceAdmin/category";
 import { TablesView } from "../views/espaceAdmin/tables";
+import QRCodeGenerator from "../components/qrCodeGenerator";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -53,6 +54,8 @@ const AppContent: React.FC = () => {
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/categories" element={<Category />} />
             <Route path="/admin/tables" element={<TablesView />} />
+            <Route path="/admin/tables/qrcode/:idResto/:numTable" element={<QRCodeGenerator />} />
+
           </Routes>
         </LayoutSidebar>
       </>

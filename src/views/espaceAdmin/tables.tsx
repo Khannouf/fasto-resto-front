@@ -64,7 +64,6 @@ export const TablesView = () => {
                     <DataTable columns={columns(deleteCategory)} data={tables} pageSize={pageSize} />
                 </div>
             </div>
-            <QRCodeGenerator idResto={1} tableId={1} />
 
             {showCard && <CardCategory onClose={() => setShowCard(false)} />}
         </>

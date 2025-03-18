@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CalendarClock, ChefHat, CookingPot, FileStack, Home, LayoutDashboard, Utensils, UtensilsCrossed } from "lucide-react"
 import {
   useSidebar,
@@ -13,6 +13,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar"
 import { Link } from "react-router-dom"
+import { useCart } from "../../context/cartContext"
 
 // Menu items.
 const items = [

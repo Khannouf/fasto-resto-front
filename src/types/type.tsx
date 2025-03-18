@@ -61,7 +61,7 @@ export interface Dish {
     restaurantId: number;
     dishIngredients: DishIngredient[];
     imageDish: DishImage[];
-    img: DishImagePath[]; // Liste des images avec URL complète
+    imageUrl: string; // Liste des images avec URL complète
 }
 
 export interface ApiResponseDish {
