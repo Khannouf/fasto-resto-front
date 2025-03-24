@@ -120,4 +120,12 @@ export interface TablesRestaurant {
     numeroTable: string
 }
 
+export interface DishFormSchema {
+    name: string,
+    description: string,
+    price: number,
+    ingredients: Ingredient,
+    img: string,
+}
+
 

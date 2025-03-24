@@ -21,7 +21,7 @@ const items = [
   { title: "Commandes", url: "admin/order", icon: UtensilsCrossed },
   { title: "Menu", url: "admin/menu", icon: ChefHat },
   { title: "Categorie", url: "admin/categories", icon: FileStack },
-  { title: "Plats", url: "admin/dish", icon: CookingPot },
+  { title: "Plats", url: "admin/dishes", icon: CookingPot },
   { title: "Tables", url: "admin/tables", icon: Utensils },
   { title: "Horaires", url: "admin/schedules", icon: CalendarClock },
 ]

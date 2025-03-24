@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 function Dashboard() {
   return (
     <div className="h-screen flex flex-col ">
-      <h1 className="ml-5 mt-5 mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+      <h1 className="ml-5 mt-5 mb-3 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-3xl">
         Dashboard
       </h1>
       <div className="ml-5 rounded-lg bg-[#efefef] flex-1 p-5 grid grid-cols-1 sm:grid-cols-1  md:grid-cols-4 lg:grid-cols-4 gap-4">
