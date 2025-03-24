@@ -6,7 +6,7 @@ function Dashboard() {
       <h1 className="ml-5 mt-5 mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
         Dashboard
       </h1>
-      <div className="ml-5 rounded-lg bg-[#efefef] flex-1 p-5 grid grid-cols-1 sm:grid-cols-1  md:grid-cols-4 lg:grid-cols-4 gap-4">
+      <div className="ml-5 rounded-lg bg-[#ffffff] flex-1 p-5 grid grid-cols-1 sm:grid-cols-1  md:grid-cols-4 lg:grid-cols-4 gap-4">
         <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 200 }} className="bg-white p-4 md:p-5 rounded-lg shadow-md flex flex-col justify-between">
           <p className="text-sm md:text-xl text-gray-600">
             Nombre de commande / jour

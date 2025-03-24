@@ -17,14 +17,14 @@ import { useCart } from "../../context/cartContext"
 
 // Menu items.
 const items = [
-  { title: "Home", url: "#", icon: Home },
-  { title: "Dashboard", url: "admin/dashboard", icon: LayoutDashboard },
-  { title: "Commandes", url: "admin/order", icon: UtensilsCrossed },
-  { title: "Menu", url: "admin/menu", icon: ChefHat },
-  { title: "Categorie", url: "admin/categories", icon: FileStack },
-  { title: "Plats", url: "admin/dish", icon: CookingPot },
-  { title: "Tables", url: "admin/tables", icon: Utensils },
-  { title: "Horaires", url: "admin/schedules", icon: CalendarClock },
+  { title: "Home", url: "/", icon: Home },
+  { title: "Dashboard", url: "dashboard", icon: LayoutDashboard },
+  { title: "Commandes", url: "order", icon: UtensilsCrossed },
+  { title: "Menu", url: "menu", icon: ChefHat },
+  { title: "Categorie", url: "categories", icon: FileStack },
+  { title: "Plats", url: "dish", icon: CookingPot },
+  { title: "Tables", url: "tables", icon: Utensils },
+  { title: "Horaires", url: "schedules", icon: CalendarClock },
 ]
 
 export function AppSidebar() {
