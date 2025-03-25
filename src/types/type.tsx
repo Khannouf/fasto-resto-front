@@ -33,6 +33,10 @@ export interface Ingredient {
   name: string;
 }
 
+export interface SendIngredient {
+  name: string;
+}
+
 export interface DishIngredient {
   dishId: number;
   ingredientId: number;
@@ -171,4 +175,17 @@ export interface ConnectedUser {
   token: string,
   restaurantId: number,
   actif: number
+}
+
+export interface DishFormSchema {
+  name: string,
+  description: string,
+  price: number,
+  ingredients: Ingredient,
+  img: string,
+}
+
+export interface ApiResponseIngredients {
+  type: string;
+  data: Ingredient,
 }

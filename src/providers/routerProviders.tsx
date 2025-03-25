@@ -18,6 +18,7 @@ import { Schedules } from "../views/espaceAdmin/schedules";
 import LayoutNavbar from "../components/navbar/layoutNavbar";
 import { Login } from "../views/espaceAccueil/login";
 import { Register } from "../views/espaceAccueil/register";
+import { Dishes } from "../views/espaceAdmin/dishes";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -39,6 +40,7 @@ const AppContent: React.FC = () => {
           <Route path="categories" element={<Category />} />
           <Route path="schedules" element={<Schedules />} />
           <Route path="tables" element={<TablesView />} />
+          <Route path="dishes" element={<Dishes />} />
           <Route
             path="tables/qrcode/:idResto/:numTable"
             element={<QRCodeGenerator />}

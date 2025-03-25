@@ -22,7 +22,7 @@ const items = [
   { title: "Commandes", url: "order", icon: UtensilsCrossed },
   { title: "Menu", url: "menu", icon: ChefHat },
   { title: "Categorie", url: "categories", icon: FileStack },
-  { title: "Plats", url: "dish", icon: CookingPot },
+  { title: "Plats", url: "dishes", icon: CookingPot },
   { title: "Tables", url: "tables", icon: Utensils },
   { title: "Horaires", url: "schedules", icon: CalendarClock },
 ]
