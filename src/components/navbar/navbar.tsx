@@ -3,18 +3,12 @@ import { Link } from "react-router-dom";
 import { Menu, X, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { isTokenValid } from "../tokenInfo";
+import { useUserContext } from "../../context/userContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const tokenValid = isTokenValid(token);
-  if (tokenValid) {
-    console.log("token valide");
-  } else {
-    console.log("token invalide");
-    localStorage.removeItem("token");
-  }
+  const { user, deleteUser } = useUserContext();
   return (
     <nav className="bg-white shadow fixed top-0 w-full z-50">
       <div className="container mx-auto flex items-center justify-between p-4">
@@ -25,10 +19,10 @@ export default function Navbar() {
           <Link to="/" className="text-gray-700 hover:text-blue-600">
             Accueil
           </Link>
-              {tokenValid ? (
+              {user ? (
                 <button
                   className="text-gray-700 hover:text-blue-600"
-                  onClick={() => localStorage.removeItem('token')}
+                  onClick={() => deleteUser()}
                 >
                   <LogOut />
                 </button>
@@ -74,11 +68,11 @@ export default function Navbar() {
               >
                 Accueil
               </Link>
-              {tokenValid ? (
+              {user ? (
                 <Link
                   to="/deconnexion"
                   className="text-gray-700 hover:text-blue-600"
-                  onClick={() => localStorage.removeItem('token')}
+                  onClick={() => deleteUser()}
                 >
                   <LogOut />
                 </Link>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "../../components/ui/input";
 import { Link } from "react-router-dom";
 import { ZodType, z } from "zod";
@@ -6,10 +6,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormSchema } from "../../types/type";
 import { Loader2 } from "lucide-react";
+import { useUserContext } from "../../context/userContext";
 
 const api_url = import.meta.env.VITE_API_URL
 
 export const Login = () => {
+  const { user, addUser }  = useUserContext()
+
+
   const zodFormSchema: ZodType<LoginFormSchema> = z.object({
     email: z.string().email({ message: "L'adresse e-mail n'est pas valide" }),
     password: z
@@ -41,13 +45,21 @@ export const Login = () => {
   
       const result = await response.json();
       localStorage.setItem('token', result.token)
-      console.log(result);
+      const newUser = {
+        token: result.token,
+        restaurantId: result.restaurant.sub,
+        actif: result.restaurant.actif
+      }
+      addUser(newUser)
+      
+      
       
   
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
     }
   };
+  
   
 
   return (

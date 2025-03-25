@@ -166,3 +166,9 @@ export interface RegisterFormSchema {
   password: string,
   confirmationPassword: string,
 }
+
+export interface ConnectedUser {
+  token: string,
+  restaurantId: number,
+  actif: number
+}
