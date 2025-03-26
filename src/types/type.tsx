@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export interface Image {
   id: number;
   filename?: string; // Présent dans "imageRestaurant"
@@ -32,6 +34,17 @@ export interface Ingredient {
   id: number;
   name: string;
 }
+
+export const ingredientSchema = z.object({
+  id: z.number(),
+  name: z.string()
+})
+
+export const apiResponseIngredientSchema = z.object({
+  type: z.string(),
+  data: z.array(ingredientSchema), // ✅ data est un tableau !
+});
+
 
 export interface SendIngredient {
   name: string;
@@ -148,6 +161,26 @@ export interface Schedule {
   sundayStart: string;
   sundayEnd: string;
 }
+
+export const daySchema = z.object({
+  start: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
+  end: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
+});
+
+export const scheduleSchema = z.object({
+  type: z.literal("success"),
+  data: z.object({
+    monday: daySchema,
+    tuesday: daySchema,
+    wednesday: daySchema,
+    thursday: daySchema,
+    friday: daySchema,
+    saturday: daySchema,
+    sunday: daySchema,
+  }),
+});
+
+
 
 export interface ApiResponseSchedules {
   type: string;
