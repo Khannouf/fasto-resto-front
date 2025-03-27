@@ -6,11 +6,12 @@ import { DataTable } from "../../components/ui/data-table";
 import { columns } from "../../components/table/tableCategory/columns";
 import { Mosaic } from "react-loading-indicators";
 import { useUserContext } from "../../context/userContext";
-import { Mutation, useQuery } from "react-query";
+import { Mutation, useMutation, useQuery, useQueryClient } from "react-query";
 
 const api = import.meta.env.VITE_API_URL;
 
 export const Category = () => {
+  const queryClient = useQueryClient();
   const { user } = useUserContext()
   const token = user?.token
   const restaurantId = user?.restaurantId
@@ -19,27 +20,44 @@ export const Category = () => {
   const [categories, setCategories] = useState<Categorie[] | null>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await fetch(`${api}/categorie/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Échec de la suppression");
+      }
+  
+      return await response.json();
+    },
+  
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categories"]); // Force le refetch
+    },
+  
+    onError: (error) => {
+      console.error("Erreur lors de la suppression :", error);
+      alert("Impossible de supprimer la catégorie.");
+    },
+  });
+  
   
   const deleteCategory = (id: number) => {
-    setCategories((prev) => prev.filter((category) => category.id !== id));
+    deleteCategoryMutation.mutate(id)
+    
   };
 
   const getCategories = async (idRestaurant: number) => (
-    fetch(`${api}/categorie/${idRestaurant}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`, // Ajout du Bearer Token
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erreur lors de la récupération des catégories");
-        }
-        return res.json();
-      })
+    fetch(`${api}/categorie/restaurant/${idRestaurant}`)
+      .then((res) => res.json())
     //.then(apiResponseIngredientSchema.parse)
-  );
+  )
   let { data, isLoading, isError } = useQuery({
     queryKey: ['categories', restaurantId],
     queryFn: () => getCategories(restaurantId!),
@@ -68,10 +86,12 @@ export const Category = () => {
   }
 
   if(data){
-
-    if (!data || data.length === 0) {
-      data = []
-    }
+    
+    
+    // if (!data || data.length === 0) {
+    //   data = []
+    // }
+    
     return(
 
     <>
@@ -109,7 +129,7 @@ export const Category = () => {
             <div className="ml-5 rounded-lg bg-[#ffffff] flex-1 p-5 lg:w-[90vw] md:w-[50vw]">
               <DataTable
                 columns={columns(deleteCategory)}
-                data={categories!}
+                data={data.data}
                 pageSize={pageSize}
               />
             </div>

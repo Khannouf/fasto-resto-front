@@ -22,13 +22,14 @@ export const CardCategory = ({ onClose }: { onClose: () => void }) => {
 
     type categoryType = z.infer<typeof categorySchema>
     const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm({
-        resolver: zodResolver(categorySchema),
+      register,
+      handleSubmit,
+      setValue,
+      formState: { errors },
+    } = useForm<categoryType>({
+      resolver: zodResolver(categorySchema),
     });
+    
 
 
     // const sendCategory = async (category: categoryType) => {
@@ -56,25 +57,35 @@ export const CardCategory = ({ onClose }: { onClose: () => void }) => {
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn:(categorySchema) => 
+        mutationFn:(category: categoryType) => 
             fetch(`${api}/categorie`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(categorySchema)
+                body: JSON.stringify(category)
             }).then((res) => res.json()),
-            onSuccess : (data) => {
-                queryClient.invalidateQueries(['categories'])
-            }
+            onSuccess: () => {
+              queryClient.invalidateQueries(["categories"]);
+            },
+          
     })
 
     
     const handleSubmitForm = (data: categoryType) => {
-        mutation.mutate()
-        onClose(); // Ferme la carte après la soumission
+      mutation.mutate(data, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["categories"]); // refetch
+          onClose(); // ferme uniquement si tout s’est bien passé
+        },
+        onError: (error) => {
+          console.error("Erreur lors de l'ajout :", error);
+          alert("Une erreur est survenue lors de la création de la catégorie.");
+        }
+      });
     };
+    
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
