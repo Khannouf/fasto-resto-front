@@ -55,7 +55,7 @@ export const Category = () => {
     //.then(apiResponseIngredientSchema.parse)
   )
   let { data, isLoading, isError } = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories', restaurantId],
     queryFn: () => getCategories(restaurantId!),
     enabled: !!restaurantId,
   })
