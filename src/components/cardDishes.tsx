@@ -197,7 +197,7 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
                         />
                     </div>
                 ) : (
-                    <Card className="w-[90vw] bg-white shadow-xl rounded-lg p-4 md:p-5 overflow-y-auto">
+                    <Card className="w-full bg-white shadow-xl rounded-lg p-4 md:p-5 overflow-y-auto">
                         <button
                             onClick={onClose}
                             className="absolute top-3 right-3 bg-white text-gray-500 hover:text-gray-700"

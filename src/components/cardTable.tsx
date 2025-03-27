@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { motion } from "framer-motion";
-import {  z } from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserContext } from "../context/userContext";
@@ -10,51 +10,51 @@ import { useMutation, useQueryClient } from "react-query";
 
 const api = import.meta.env.VITE_API_URL
 
-export const CardCategory = ({ onClose }: { onClose: () => void }) => {
+export const CardTable = ({ onClose }: { onClose: () => void }) => {
     const { user } = useUserContext();
     const token = user?.token
 
-    const categorySchema = z.object({
-        name: z.string(),
+    const TableSchema = z.object({
+        numeroTable: z.number(),
     });
 
-    type categoryType = z.infer<typeof categorySchema>
+    type tableType = z.infer<typeof TableSchema>
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<categoryType>({
-        resolver: zodResolver(categorySchema),
+    } = useForm<tableType>({
+        resolver: zodResolver(TableSchema),
     });
 
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (category: categoryType) =>
-            fetch(`${api}/categorie`, {
+        mutationFn: (table: tableType) =>
+            fetch(`${api}/table`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(category)
+                body: JSON.stringify(table)
             }).then((res) => res.json()),
         onSuccess: () => {
-            queryClient.invalidateQueries(["categories"]);
+            queryClient.invalidateQueries(["tables"]);
         },
 
     })
 
 
-    const handleSubmitForm = (data: categoryType) => {
+    const handleSubmitForm = (data: tableType) => {
         mutation.mutate(data, {
             onSuccess: () => {
-                queryClient.invalidateQueries(["categories"]); // refetch
+                queryClient.invalidateQueries(["tables"]); // refetch
                 onClose(); // ferme uniquement si tout s’est bien passé
             },
             onError: (error) => {
                 console.error("Erreur lors de l'ajout :", error);
-                alert("Une erreur est survenue lors de la création de la catégorie.");
+                alert("Une erreur est survenue lors de la création de la table.");
             }
         });
     };
@@ -70,19 +70,19 @@ export const CardCategory = ({ onClose }: { onClose: () => void }) => {
             >
                 <Card className="w-96 bg-white shadow-lg rounded-lg p-4">
                     <CardHeader>
-                        <CardTitle>Nouvelle Catégorie</CardTitle>
+                        <CardTitle>Nouvelle Table</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-4">
                             <Input
                                 type="text"
-                                placeholder="Nom de la catégorie"
+                                placeholder="Numéro de la table"
                                 required
-                                {...register('name')}
+                                {...register('numeroTable', { valueAsNumber: true })}
                             />
-                            {errors.name && (
+                            {errors.numeroTable && (
                                 <p className="text-red-500 text-sm mt-1">
-                                    {errors.name.message}
+                                    {errors.numeroTable.message}
                                 </p>
                             )}
                             <div className="flex justify-end gap-2">

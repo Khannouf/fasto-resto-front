@@ -133,7 +133,7 @@ export interface CartContextType extends CartState {
 
 export interface TablesRestaurant {
   id: number;
-  numeroTable: string;
+  tableNumber: string;
 }
 
 export interface ScheduleDayRow {

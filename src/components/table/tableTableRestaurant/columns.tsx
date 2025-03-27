@@ -1,7 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Categorie, TablesRestaurant } from "../../../types/type";
-import { Button } from "../../ui/button";
-import { MoreHorizontal, Trash } from "lucide-react";
+import { TablesRestaurant } from "../../../types/type";
+import { Trash } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -25,7 +24,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "numeroTable",
+    accessorKey: "tableNumber",
     header: ({ column }) => {
       return (
         <button
@@ -45,7 +44,7 @@ export const columns = (
       const cat = row.original;
 
       return (
-        <Link to={`/admin/tables/qrcode/${idResto}/${cat.numeroTable}`} target="_blank">
+        <Link to={`/admin/tables/qrcode/${idResto}/${cat.tableNumber}`} target="_blank">
           <button className="bg-black text-white font-semibold"> Générer</button>
         </Link>
       )

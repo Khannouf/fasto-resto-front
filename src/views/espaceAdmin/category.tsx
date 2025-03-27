@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { ApiResponseCategorie, Categorie } from "../../types/type";
+import { useState } from "react";
 import { CirclePlus } from "lucide-react";
 import { CardCategory } from "../../components/cardCategory";
 import { DataTable } from "../../components/ui/data-table";
 import { columns } from "../../components/table/tableCategory/columns";
 import { Mosaic } from "react-loading-indicators";
 import { useUserContext } from "../../context/userContext";
-import { Mutation, useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -17,9 +16,6 @@ export const Category = () => {
   const restaurantId = user?.restaurantId
   const [showCard, setShowCard] = useState(false);
   const [pageSize, setPageSize] = useState(10);
-  const [categories, setCategories] = useState<Categorie[] | null>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const deleteCategoryMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -59,7 +55,7 @@ export const Category = () => {
     //.then(apiResponseIngredientSchema.parse)
   )
   let { data, isLoading, isError } = useQuery({
-    queryKey: ['categories', restaurantId],
+    queryKey: ['categories'],
     queryFn: () => getCategories(restaurantId!),
     enabled: !!restaurantId,
   })
@@ -73,7 +69,7 @@ export const Category = () => {
             text="chargement..."
             textColor="#000000"
           />
-        </div>
+        </div>  
     )
   }
 

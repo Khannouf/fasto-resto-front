@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { Input } from "../../components/ui/input";
 import { Link } from "react-router-dom";
 import { ZodType, z } from "zod";
@@ -11,7 +10,7 @@ import { useUserContext } from "../../context/userContext";
 const api_url = import.meta.env.VITE_API_URL
 
 export const Login = () => {
-  const { user, addUser }  = useUserContext()
+  const { addUser }  = useUserContext()
 
 
   const zodFormSchema: ZodType<LoginFormSchema> = z.object({
