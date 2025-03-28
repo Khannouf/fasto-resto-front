@@ -12,6 +12,7 @@ import { ApiResponseCategorie, ApiResponseIngredients, Categorie, DishFormSchema
 import { Mosaic } from "react-loading-indicators";
 import { useUserContext } from "../context/userContext";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Textarea } from "./ui/textarea";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -41,9 +42,9 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
     const addIngredient = (input: string) => {
         if (!input.trim()) return;
         const inputUpper = input.toUpperCase();
-        if (dataIngredients.data) {
+        if (availableIngredients) {
 
-            const existingIngredient = dataIngredients.data.find((ing: { name: string; }) => ing.name === inputUpper);
+            const existingIngredient = availableIngredients.find((ing: { name: string; }) => ing.name === inputUpper);
             const newIngredient = existingIngredient
                 ? { ...existingIngredient, quantity: 1 }
                 : { id: Date.now(), name: inputUpper, quantity: 1 };
@@ -89,6 +90,7 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
     const dishSchema = z.object({
         name: z.string().nonempty({ message: "Vous devez nommer votre plat" }),
         description: z.string().optional(),
+        category: z.string(),
         price: z.number({ message: "Le rendu est un chiffre" }),
         image: imageValidation,
         ingredients: z
@@ -107,8 +109,6 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
         defaultValues: { ingredients: [] },
     });
     type dischType = z.infer<typeof dishSchema>;
-
-
 
     const sendIngredients = async (ingredients: SendIngredient[]) => {
         try {
@@ -131,92 +131,73 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
             console.error("Erreur lors de l'envoi des ingrédients :", error);
         }
     }
+
+    useEffect(() => {
+        const fetchIgredients = async () => {
+            try {
+                const response = await fetch(`${api}/ingredients`);
+                if (!response.ok)
+                    throw new Error("Erreur lors de la récupération des données");
+                const data: ApiResponseIngredients = await response.json();
+                setAvailableIngredients(data.data);
+            } catch (err) {
+                setError((err as Error).message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch(
+                    `${api}/categorie/restaurant/${restaurantId}`
+                );
+                if (!response.ok)
+                    throw new Error("Erreur lors de la récupération des données");
+                const data: ApiResponseCategorie = await response.json();
+                // Vérifier si l'API retourne un tableau ou un objet unique
+                const categoriesArray = Array.isArray(data.data)
+                    ? data.data
+                    : [data.data];
+                setCategories(categoriesArray);
+            } catch (err) {
+                setError((err as Error).message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchIgredients();
+        fetchCategories()
+
+    }, [])
+
     const handleSubmitForm = (data: dischType) => {
         const ingredientsForm = data.ingredients.map(ingredient => ({ name: ingredient.name }));
-        sendIngredients(ingredientsForm)
-
-
-
+        //sendIngredients(ingredientsForm)
+        console.log(data);
         onClose();
     };
 
-    // useEffect(() => {
-    //     const fetchIgredients = async () => {
-    //         try {
-    //             const response = await fetch(`${api}/ingredients`);
-    //             if (!response.ok)
-    //                 throw new Error("Erreur lors de la récupération des données");
-    //             const data: ApiResponseIngredients = await response.json();
-    //             setAvailableIngredients(data.data);
-    //             console.log(data.data);
-    //         } catch (err) {
-    //             setError((err as Error).message);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     const fetchCategories = async () => {
-    //         try {
-    //             const response = await fetch(
-    //                 `${api}/categorie/restaurant/${restaurantId}`
-    //             );
-    //             if (!response.ok)
-    //                 throw new Error("Erreur lors de la récupération des données");
-    //             const data: ApiResponseCategorie = await response.json();
-    //             // Vérifier si l'API retourne un tableau ou un objet unique
-    //             const categoriesArray = Array.isArray(data.data)
-    //                 ? data.data
-    //                 : [data.data];
-    //             setCategories(categoriesArray);
-    //         } catch (err) {
-    //             setError((err as Error).message);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
+    console.log(categories);
 
-    //     fetchIgredients();
-    //     fetchCategories()
-    // }, [])
 
-    const mutationIngredients = useMutation({
-        mutationFn: (ingredients: SendIngredient[]) =>
-            fetch(`${api}/ingredients/many`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(ingredients)
-            }).then((res) => res.json()),
-        onSuccess: () => {
-            queryClient.invalidateQueries(["categories"]);
-        },
+    // const mutationIngredients = useMutation({
+    //     mutationFn: (ingredients: SendIngredient[]) =>
+    //         fetch(`${api}/ingredients/many`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 "Authorization": `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify(ingredients)
+    //         }).then((res) => res.json()),
+    //     onSuccess: () => {
+    //         queryClient.invalidateQueries(["categories"]);
+    //     },
 
-    })
+    // })
 
-    const getCategories = async (idRestaurant: number) => (
-        fetch(`${api}/categorie/restaurant/${idRestaurant}`)
-            .then((res) => res.json())
-        //.then(apiResponseIngredientSchema.parse)
-    )
-    let { data: dataCategory, isLoading: isLoadingCategory, isError: isErrorCategory } = useQuery({
-        queryKey: ['categories'],
-        queryFn: () => getCategories(restaurantId!),
-        enabled: !!restaurantId,
-    })
 
-    const getIngredients = async () => (
-        fetch(`${api}/ingredients`)
-            .then((res) => res.json())
-        //.then(apiResponseIngredientSchema.parse)
-    )
-    let { data: dataIngredients, isLoading: isLoadingIngredients, isError: isErrorIngredients } = useQuery({
-        queryKey: ['ingredients'],
-        queryFn: () => getIngredients(),
-    })
-
-    
 
 
     return (
@@ -228,17 +209,12 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
                 transition={{ duration: 0.3, ease: "backInOut" }}
                 className="relative w-full max-w-[90vw] md:max-w-[400px] h-auto max-h-[90vh]"
             >
-                {isLoadingCategory || isLoadingIngredients ? (
+                {loading ? (
                     <div className="flex justify-center items-center h-screen w-screen">
-                        <Mosaic
-                            color="#35ca35"
-                            size="medium"
-                            text="chargement..."
-                            textColor="#000000"
-                        />
+                        <Mosaic color="#35ca35" size="medium" text="chargement..." textColor="#000000" />
                     </div>
                 ) : (
-                    <Card className="w-full bg-white shadow-xl rounded-lg p-4 md:p-5 overflow-y-auto">
+                    <Card className="w-full bg-white shadow-xl rounded-lg p-4 md:p-5 flex flex-col max-h-[80vh] overflow-y-auto">
                         <button
                             onClick={onClose}
                             className="absolute top-3 right-3 bg-white text-gray-500 hover:text-gray-700"
@@ -248,7 +224,7 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
                         <CardHeader>
                             <CardTitle>Ajouter un Plat</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="flex-1 overflow-y-auto">
                             <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-4">
                                 <Input
                                     type="text"
@@ -271,6 +247,16 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
                                 {errors.price && (
                                     <p className="text-red-500 text-sm mt-1">
                                         {errors.price.message}
+                                    </p>
+                                )}
+                                <Textarea
+                                    placeholder="Description du plat"
+                                    className="w-full"
+                                    {...register('description')}
+                                />
+                                {errors.description && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {errors.description.message}
                                     </p>
                                 )}
 
