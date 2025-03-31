@@ -81,6 +81,14 @@ export const columns = (
         },
         {
             id: "imageUrl",
+            header: ({ column }) => {
+              return (
+                  
+                      <>
+                      Image
+                      </>
+              );
+          },
             cell: ({ row }) => {
                 const cat = row.original;
                 console.log(cat.imageUrl);

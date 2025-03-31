@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 const QRCodeGenerator = () => {
 
     const params = useParams()
-    const url = `http://localhost:5173/restaurant/${params.idResto}?tableId=${params.numTable}`;
+    const url = `http://192.168.1.97:5173/restaurant/${params.idResto}?tableId=${params.numTable}`;
 
     return (
         <div className="flex flex-col items-center gap-3">

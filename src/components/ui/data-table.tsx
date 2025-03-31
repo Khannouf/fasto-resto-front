@@ -70,6 +70,9 @@ export function DataTable<TData, TValue>({
         table.setPageSize(pageSize);
     }, [pageSize, table]);
 
+    console.log(columnVisibility);
+    
+
     return (
         <div>
             {/* 🔍 Barre de recherche pour filtrer TOUTES les colonnes */}

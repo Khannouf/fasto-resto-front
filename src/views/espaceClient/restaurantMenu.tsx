@@ -108,7 +108,7 @@ function RestaurantMenu() {
     const fetchDishes = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/dishes/allByRestaurant/${params.idResto}`
+          `${api}/dishes/allByRestaurant/${params.idResto}`
         );
         if (!response.ok)
           throw new Error("Erreur lors de la récupération des données");
