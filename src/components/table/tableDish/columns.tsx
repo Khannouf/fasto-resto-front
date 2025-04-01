@@ -82,27 +82,23 @@ export const columns = (
         {
             id: "imageUrl",
             header: ({ column }) => {
-              return (
-                  
-                      <>
-                      Image
-                      </>
-              );
-          },
+                return (
+
+                    <>
+                        Image
+                    </>
+                );
+            },
             cell: ({ row }) => {
                 const cat = row.original;
-                console.log(cat.imageUrl);
-                
-
-
                 return (
                     <div className="w-24 h-24 bg-gray-200 rounded-md overflow-hidden">
-                    <img
-                        src={cat.imageUrl}
-                        alt="Image"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
+                        <img
+                            src={cat.imageUrl}
+                            alt="Image"
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
                 );
             },
         },

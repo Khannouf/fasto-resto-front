@@ -69,8 +69,6 @@ export function DataTable<TData, TValue>({
     useEffect(() => {
         table.setPageSize(pageSize);
     }, [pageSize, table]);
-
-    console.log(columnVisibility);
     
 
     return (
