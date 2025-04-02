@@ -211,9 +211,24 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
         fetchCategories();
     }, []);
 
-    const mutation = useMutation({
+    const mutationAddDish = useMutation({
         mutationFn: (data: dischType) =>
-            fetch(`http://localhost:3000/dishes`, {
+            fetch(`${api}/dishes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            }).then((res) => res.json()),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["dish", restaurantId]);
+        },
+    })
+    
+    const mutationAddDishImg = useMutation({
+        mutationFn: (data: dischType) =>
+            fetch(`${api}/dishes/addImage`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -234,19 +249,19 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
         if (formIngredients) {
             const mergedItems = mergeArrays(formIngredients, ingredients).filter(item => item !== undefined);
             const newData = { ...data, ingredients: mergedItems};
+            console.log(newData);
+            
             const formattedData = {
                 name: data.name,
                 description: data.description,
                 categorieId: Number(data.category), // Corrige la clé et convertit en nombre
                 price: data.price,
-                ingredients: data.ingredients.map(ingredient => ({
+                ingredients: newData.ingredients.map(ingredient => ({
                     ingredientId: ingredient.id, // Renomme id en ingredientId
                     quantity: String(ingredient.quantity) // Convertit quantity en string
                 }))
             };
-            console.log(formattedData);
-                        
-            mutation.mutate(formattedData, {
+            mutationAddDish.mutate(formattedData, {
                 onSuccess: () => {
                     queryClient.invalidateQueries(["dish", restaurantId]); // refetch
                     onClose(); // ferme uniquement si tout s’est bien passé
@@ -256,7 +271,6 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
                     alert("Une erreur est survenue lors de la création du plat.");
                 }
             });
-            console.log(newData);
 
             onClose();
         }

@@ -80,6 +80,36 @@ export const columns = (
             },
         },
         {
+            id: "Ingredients",
+            header: ({ column }) => {
+                return (
+
+                    <>
+                        Ingredients
+                    </>
+                );
+            },
+            cell: ({ row }) => {
+                const cat = row.original;
+                const ingredients = cat.dishIngredients
+
+                return (
+                    <ul className="bg-gray-50 rounded-md p-2">
+                        {ingredients.map((ingredient) => (
+                            <li
+                                key={ingredient.ingredientId}
+                                className="text-sm text-gray-700 py-1 border-b last:border-none"
+                            >
+                                {ingredient.quantity} x {ingredient.ingredient.name}
+                            </li>
+                        ))}
+                    </ul>
+
+
+                );
+            },
+        },
+        {
             id: "imageUrl",
             header: ({ column }) => {
                 return (
