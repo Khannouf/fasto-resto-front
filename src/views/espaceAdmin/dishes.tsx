@@ -2,7 +2,7 @@ import { CirclePlus } from 'lucide-react'
 import React, { useState } from 'react'
 import { CardDishes } from '../../components/cardDishes';
 import { useUserContext } from '../../context/userContext';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { columns } from '../../components/table/tableDish/columns';
 import { DataTable } from '../../components/ui/data-table';
 
@@ -10,13 +10,45 @@ import { DataTable } from '../../components/ui/data-table';
 const api = import.meta.env.VITE_API_URL
 
 export const Dishes = () => {
+    const queryClient = useQueryClient()
     const { user } = useUserContext();
+    const token = user?.token
     const restaurantId = user?.restaurantId;
     const [showCard, setShowCard] = useState(false);
     const [pageSize, setPageSize] = useState(10);
 
-    const deleteDish = () => {
+    const deleteDishMutation = useMutation({
+        mutationFn: async (id: number) => {
+            const response = await fetch(`${api}/dishes/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Échec de la suppression");
+            }
+
+            return await response.json();
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries(["dish", restaurantId]); // Force le refetch
+        },
+
+        onError: (error) => {
+            console.error("Erreur lors de la suppression :", error);
+            alert("Impossible de supprimer la catégorie.");
+        },
+    });
+
+
+    const deleteDish = (id: number) => {
+        deleteDishMutation.mutate(id)
     };
+
+
     const getCategories = async (idRestaurant: number) => {
         const response = await fetch(`${api}/categorie/restaurant/${idRestaurant}`);
         if (!response.ok) {

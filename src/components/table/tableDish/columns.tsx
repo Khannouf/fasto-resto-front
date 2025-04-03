@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const idResto = 1;
 
 export const columns = (
-    deleteCategory: (id: number) => void
+    deleteDish: (id: number) => void
 ): ColumnDef<Dish>[] => [
         {
             accessorKey: "id",
@@ -138,7 +138,7 @@ export const columns = (
                 const cat = row.original;
 
                 return (
-                    <button onClick={() => deleteCategory(cat.id)} className="bg-white ">
+                    <button onClick={() => deleteDish(cat.id)} className="bg-white ">
                         {" "}
                         <Trash className="text-red-500 " />
                     </button>

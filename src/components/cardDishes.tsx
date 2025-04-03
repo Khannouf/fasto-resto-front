@@ -220,61 +220,99 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(data)
-            }).then((res) => res.json()),
-        onSuccess: () => {
-            queryClient.invalidateQueries(["dish", restaurantId]);
-        },
-    })
+            }).then((res) => {
+                if (!res.ok) throw new Error("Erreur lors de la création du plat");
+                return res.json(); // Attend une réponse JSON avec l'ID du plat
+            }),
+    });
     
     const mutationAddDishImg = useMutation({
-        mutationFn: (data: dischType) =>
-            fetch(`${api}/dishes/addImage`, {
+        mutationFn: async ({ image, id }: { image: File; id: number }) => {
+            const formData = new FormData();
+            formData.append("image", image); // Clé "image" pour correspondre à FileInterceptor('image')
+            formData.append("id", String(id)); // S'assurer que dishId est bien une string
+    
+            return fetch(`${api}/dishes/addImage`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`, // NE PAS METTRE Content-Type, car FormData le gère
                 },
-                body: JSON.stringify(data)
-            }).then((res) => res.json()),
+                body: formData,
+            }).then((res) => {
+                if (!res.ok) {
+                    return res.json().then(err => { throw new Error(err.message || "Erreur lors de l’upload de l’image") });
+                }
+                return res.json();
+            });
+        },
         onSuccess: () => {
             queryClient.invalidateQueries(["dish", restaurantId]);
         },
-    })
-
+        onError: (error) => {
+            console.error("Erreur lors de l'upload de l'image :", error);
+            alert("L’image n’a pas pu être envoyée.");
+        }
+    });
+    
+    
     const handleSubmitForm = async (data: dischType) => {
         const ingredientsForm = data.ingredients.map((ingredient) => ({
             name: ingredient.name,
         }));
-        const formIngredients = await sendIngredients(ingredientsForm)
+    
+        const formIngredients = await sendIngredients(ingredientsForm);
         if (formIngredients) {
             const mergedItems = mergeArrays(formIngredients, ingredients).filter(item => item !== undefined);
-            const newData = { ...data, ingredients: mergedItems};
-            console.log(newData);
+            const newData = { ...data, ingredients: mergedItems };
             
             const formattedData = {
                 name: data.name,
                 description: data.description,
-                categorieId: Number(data.category), // Corrige la clé et convertit en nombre
+                categorieId: Number(data.category),
                 price: data.price,
+                image: data.image,
                 ingredients: newData.ingredients.map(ingredient => ({
-                    ingredientId: ingredient.id, // Renomme id en ingredientId
-                    quantity: String(ingredient.quantity) // Convertit quantity en string
-                }))
+                    ingredientId: ingredient.id,
+                    quantity: String(ingredient.quantity),
+                })),
             };
+    
+            // 1️⃣ Envoie du plat
             mutationAddDish.mutate(formattedData, {
-                onSuccess: () => {
-                    queryClient.invalidateQueries(["dish", restaurantId]); // refetch
-                    onClose(); // ferme uniquement si tout s’est bien passé
+                onSuccess: (dishResponse) => {
+                    console.log("Plat créé :", dishResponse);
+                    
+                    if (formattedData.image) {
+                        console.log(formattedData.image);
+                        console.log(dishResponse.data.id);
+                        
+                        
+                        // 2️⃣ Envoie de l'image une fois le plat créé
+                        mutationAddDishImg.mutate(
+                            { image: formattedData.image, id: dishResponse.data.id },
+                            {
+                                onSuccess: () => {
+                                    queryClient.invalidateQueries(["dish", restaurantId]);
+                                    onClose(); // Fermer seulement si tout est réussi
+                                },
+                                onError: (error) => {
+                                    console.error("Erreur lors de l'ajout de l’image :", error);
+                                    alert("Le plat a été ajouté, mais l’image n’a pas pu être envoyée.");
+                                },
+                            }
+                        );
+                    } else {
+                        onClose();
+                    }
                 },
                 onError: (error) => {
-                    console.error("Erreur lors de l'ajout :", error);
+                    console.error("Erreur lors de l'ajout du plat :", error);
                     alert("Une erreur est survenue lors de la création du plat.");
-                }
+                },
             });
-
-            onClose();
         }
     };
+    
 
 
     return (
