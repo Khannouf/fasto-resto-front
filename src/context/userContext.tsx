@@ -19,6 +19,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const storedUser = localStorage.getItem("connectedUser");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+      //rajouter le istokenValid
     }
   }, []);
 

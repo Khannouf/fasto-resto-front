@@ -159,7 +159,7 @@ function RestaurantMenu() {
                     onClick={() => setActiveCategory(categorie.id)}
                     className={`text-sm font-medium px-4 py-2 transition-all rounded-full ${
                       activeCategory === categorie.id
-                        ? "bg-red-500 text-white"
+                        ? "bg-red-700 text-white"
                         : "bg-[#FFD5D5] text-black"
                     }`}
                   >

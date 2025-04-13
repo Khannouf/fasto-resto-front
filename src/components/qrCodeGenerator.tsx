@@ -1,11 +1,12 @@
 import React from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { useParams } from "react-router-dom";
+const api = import.meta.env.VITE_FRONT_URL
 
 const QRCodeGenerator = () => {
 
     const params = useParams()
-    const url = `http://192.168.1.97:5173/restaurant/${params.idResto}?tableId=${params.numTable}`;
+    const url = `${api}/restaurant/${params.idResto}?tableId=${params.numTable}`;
 
     return (
         <div className="flex flex-col items-center gap-3">
