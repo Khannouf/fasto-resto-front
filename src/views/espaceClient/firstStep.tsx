@@ -88,7 +88,7 @@ function FirstStep() {
                 {restaurant?.restaurantName}
               </p>
 
-              <div className="bg-[#e7e7e7] w-80 h-64 fixed top-[25%] left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg flex">
+              <div className="bg-[#e7e7e7] w-80 h-52 fixed top-[25%] left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg flex">
                 <ScrollArea className="h-full w-full">
                   <div className="h-full overflow-y-auto">
                     <p className="text-lg text-center font-semibold">
@@ -103,9 +103,9 @@ function FirstStep() {
                 className="text-black"
                 onClick={() => localStorage.setItem("locationEat", "on site")}
               >
-                <button className="bg-[#FAFAFA] w-80 h-24 fixed top-[57%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg">
-                  <MapPin size={50} className="text-red-500" />
-                  <span className="text-2xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2">
+                <button className="bg-[#FAFAFA] w-80 h-20 fixed top-[57%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg">
+                  <MapPin size={40} className="text-red-500" />
+                  <span className="text-xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2">
                     Sur place
                   </span>
                 </button>
@@ -115,9 +115,9 @@ function FirstStep() {
                 className="text-black"
                 onClick={() => localStorage.setItem("locationEat", "take away")}
               >
-                <button className="bg-[#FAFAFA] w-80 h-24 fixed top-[70%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg">
-                  <Package size={50} className="text-red-500" />
-                  <span className="text-2xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2">
+                <button className="bg-[#FAFAFA] w-80 h-20 fixed top-[70%] left-1/2 transform -translate-x-1/2 flex items-center justify-between px-6 shadow-md rounded-lg">
+                  <Package size={40} className="text-red-500" />
+                  <span className="text-xl font-bold mx-auto absolute left-1/2 transform -translate-x-1/2">
                     A emporter
                   </span>
                 </button>

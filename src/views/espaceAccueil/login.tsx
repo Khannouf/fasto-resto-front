@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Input } from "../../components/ui/input";
 import { Link } from "react-router-dom";
 import { ZodType, z } from "zod";
@@ -7,16 +8,15 @@ import { LoginFormSchema } from "../../types/type";
 import { Loader2 } from "lucide-react";
 import { useUserContext } from "../../context/userContext";
 
-const api_url = import.meta.env.VITE_API_URL
+const api_url = import.meta.env.VITE_API_URL;
 
 export const Login = () => {
-  const { addUser }  = useUserContext()
-
+  const { addUser } = useUserContext();
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const zodFormSchema: ZodType<LoginFormSchema> = z.object({
     email: z.string().email({ message: "L'adresse e-mail n'est pas valide" }),
-    password: z
-      .string()
+    password: z.string(),
   });
 
   const {
@@ -26,6 +26,8 @@ export const Login = () => {
   } = useForm<LoginFormSchema>({ resolver: zodResolver(zodFormSchema) });
 
   const handleSubmitForm = async (data: LoginFormSchema) => {
+    setLoginError(null); // Réinitialiser l'erreur à chaque tentative
+
     try {
       const response = await fetch(`${api_url}/auth/login`, {
         method: "POST",
@@ -37,50 +39,38 @@ export const Login = () => {
           password: data.password,
         }),
       });
-  
+
       if (!response.ok) {
-        throw new Error("Erreur lors de la connexion");
+        throw new Error("Identifiants incorrects. Veuillez réessayer.");
       }
-  
+
       const result = await response.json();
-      localStorage.setItem('token', result.token)
+      localStorage.setItem("token", result.token);
+
       const newUser = {
         token: result.token,
         restaurantId: result.restaurant.sub,
-        actif: result.restaurant.actif
-      }
-      addUser(newUser)
-      
-      
-      
-  
+        actif: result.restaurant.actif,
+      };
+      addUser(newUser);
     } catch (error) {
-      console.error("Erreur lors de la connexion :", error);
+      setLoginError(error.message); // Afficher l'erreur sous le bouton
     }
   };
-  
-  
 
   return (
     <div className="fixed inset-0 w-screen h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <div className="text-center">
-          
           <h2 className="mt-6 text-2xl font-bold tracking-tight text-gray-900">
             Bienvenue sur FastoResto !
           </h2>
         </div>
 
-        <form
-          className="mt-8 space-y-6"
-          onSubmit={handleSubmit(handleSubmitForm)}
-        >
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleSubmitForm)}>
           <fieldset disabled={isSubmitting} className="space-y-4">
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <Input
@@ -91,25 +81,15 @@ export const Login = () => {
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm"
                 {...register("email")}
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Mot de passe
                 </label>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-red-600 hover:text-red-500"
-                >
+                <a href="#" className="text-sm font-medium text-red-600 hover:text-red-500">
                   Mot de passe oublié ?
                 </a>
               </div>
@@ -121,11 +101,7 @@ export const Login = () => {
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm"
                 {...register("password")}
               />
-              {errors.password && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.password.message}
-                </p>
-              )}
+              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
             </div>
 
             <div>
@@ -133,22 +109,23 @@ export const Login = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
-                {isSubmitting ? (
-                  <Loader2 className="animate-spin m-auto" />
-                ) : (
-                  "Se connecter"
-                )}
+                {isSubmitting ? <Loader2 className="animate-spin m-auto" /> : "Se connecter"}
               </button>
             </div>
+
+            {/* Affichage du message d'erreur si le login échoue */}
+            {loginError && (
+              <p className="text-red-500 text-center text-sm font-semibold bg-rose-100 h-12 m-4 rounded-lg flex items-center justify-center">
+                L'email ou le mot de passe n'est pas bon
+              </p>
+            )}
+
           </fieldset>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Pas de compte ?{" "}
-          <Link
-            to="/register"
-            className="font-medium text-red-600 hover:text-red-500"
-          >
+          <Link to="/register" className="font-medium text-red-600 hover:text-red-500">
             Inscrivez-vous
           </Link>
         </p>
