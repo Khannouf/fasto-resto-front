@@ -19,6 +19,7 @@ import LayoutNavbar from "../components/navbar/layoutNavbar";
 import { Login } from "../views/espaceAccueil/login";
 import { Register } from "../views/espaceAccueil/register";
 import { Dishes } from "../views/espaceAdmin/dishes";
+import { Menus } from "../views/espaceAdmin/menu";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -37,6 +38,7 @@ const AppContent: React.FC = () => {
         ></Route>
         <Route path="/admin" element={<LayoutSidebar />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="menu" element={<Menus />} />
           <Route path="categories" element={<Category />} />
           <Route path="schedules" element={<Schedules />} />
           <Route path="tables" element={<TablesView />} />

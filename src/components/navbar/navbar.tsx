@@ -9,6 +9,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { user, deleteUser } = useUserContext();
+
   return (
     <nav className="bg-white shadow fixed top-0 w-full z-50">
       <div className="container mx-auto flex items-center justify-between p-4">
@@ -16,26 +17,36 @@ export default function Navbar() {
           fastoresto
         </Link>
         <div className="hidden md:flex gap-8">
-          <Link to="/" className="text-gray-700 hover:text-blue-600">
+          <Link to="/" className="text-gray-700 ">
             Accueil
           </Link>
-              {user ? (
-                <button
-                  className="text-gray-700 hover:text-blue-600"
-                  onClick={() => deleteUser()}
-                >
-                  <LogOut />
-                </button>
-              ) : (
-                <Link
-                  to="/login"
-                  className="text-gray-700 hover:text-blue-600"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Login
-                </Link>
-              )}
-          <Link to="/contact" className="text-gray-700 hover:text-blue-600">
+          {user ? (
+            <>
+              <Link
+                to="/"
+                className="text-gray-700 "
+                onClick={() => deleteUser()}
+              >
+                Déconnexion
+              </Link>
+              <Link
+                to="/admin/dashboard"
+                className="text-gray-700 "
+                onClick={() => setIsOpen(false)}
+              >
+                Admin
+              </Link>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="text-gray-700 "
+              onClick={() => setIsOpen(false)}
+            >
+              Login
+            </Link>
+          )}
+          <Link to="/contact" className="text-gray-700 ">
             Contact
           </Link>
         </div>
@@ -63,23 +74,32 @@ export default function Navbar() {
             <div className="flex flex-col gap-4 p-4">
               <Link
                 to="/"
-                className="text-gray-700 hover:text-blue-600"
+                className="text-gray-700 "
                 onClick={() => setIsOpen(false)}
               >
                 Accueil
               </Link>
               {user ? (
-                <Link
-                  to="/deconnexion"
-                  className="text-gray-700 hover:text-blue-600"
-                  onClick={() => deleteUser()}
-                >
-                  <LogOut />
-                </Link>
+                <>
+                  <Link
+                  to="/"
+                    className="text-gray-700 "
+                    onClick={() => deleteUser()}
+                  >
+                    Déconnexion
+                  </Link>
+                  <Link
+                    to="/admin/dashboard"
+                    className="text-gray-700 "
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                </>
               ) : (
                 <Link
                   to="/login"
-                  className="text-gray-700 hover:text-blue-600"
+                  className="text-gray-700 "
                   onClick={() => setIsOpen(false)}
                 >
                   Login
@@ -87,7 +107,7 @@ export default function Navbar() {
               )}
               <Link
                 to="/contact"
-                className="text-gray-700 hover:text-blue-600"
+                className="text-gray-700 "
                 onClick={() => setIsOpen(false)}
               >
                 Contact

@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { ConnectedUser } from "../types/type"; // adapte le chemin
 import { isTokenValid } from "../components/tokenInfo";
 
+const front_url = import.meta.env.VITE_FRONT_URL;
+
 interface UserContextType {
   user: ConnectedUser | null;
   addUser: (user: ConnectedUser) => void;
@@ -44,6 +46,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     localStorage.removeItem("connectedUser");
     localStorage.removeItem("token");
+    //window.location.replace(front_url);
   };
 
   useEffect(() => {

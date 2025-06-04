@@ -65,8 +65,8 @@ const HoverableLink = ({ item }: { item: { title: string; url: string; icon: Rea
     >
       <Link to={item.url} className="flex items-center gap-3 px-4 py-2 w-full hover:bg-gray-100 rounded-lg transition text-black">
         <motion.div
-          animate={isHovered ? { scale: 1.3, rotate: 10 } : { scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          animate={isHovered ? { scale: 1.1, rotate: 5 } : { scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200 }}
         >
           <item.icon className="w-6 h-6 mr-2" />
         </motion.div>

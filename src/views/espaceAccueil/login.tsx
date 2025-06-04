@@ -5,14 +5,24 @@ import { ZodType, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormSchema } from "../../types/type";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useUserContext } from "../../context/userContext";
 
 const api_url = import.meta.env.VITE_API_URL;
+const front_url = import.meta.env.VITE_FRONT_URL;
 
 export const Login = () => {
   const { addUser } = useUserContext();
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [mdpInut, setMdpInput] = useState("password")
+
+  const seeMdp = () => {
+    if (mdpInut == "password") {
+      setMdpInput('text')
+    } else (
+      setMdpInput('password')
+    )
+  }
 
   const zodFormSchema: ZodType<LoginFormSchema> = z.object({
     email: z.string().email({ message: "L'adresse e-mail n'est pas valide" }),
@@ -53,6 +63,7 @@ export const Login = () => {
         actif: result.restaurant.actif,
       };
       addUser(newUser);
+      window.location.replace(front_url + "/admin/dashboard");
     } catch (error) {
       setLoginError(error.message); // Afficher l'erreur sous le bouton
     }
@@ -93,17 +104,29 @@ export const Login = () => {
                   Mot de passe oublié ?
                 </a>
               </div>
-              <Input
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                required
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm"
-                {...register("password")}
-              />
+              <div className="mt-1 relative">
+                <Input
+                  type={mdpInut}
+                  id="password"
+                  autoComplete="current-password"
+                  required
+                  className="block w-full rounded-md border border-gray-300 px-3 py-2 pr-10 placeholder-gray-400 focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm"
+                  {...register("password")}
+                />
+                <div
+                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                  onClick={seeMdp}
+                >
+                  {mdpInut === "password" ? (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  )}
+                </div>
+              </div>
+
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
             </div>
-
             <div>
               <button
                 type="submit"
