@@ -9,6 +9,7 @@ import { useUserContext } from "../context/userContext";
 import { useMutation, useQueryClient } from "react-query";
 import { useToast } from "../hooks/use-toast";
 import { useState } from "react";
+import { ScrollArea } from "../components/ui/scroll-area";
 
 const api = import.meta.env.VITE_API_URL
 
@@ -116,11 +117,51 @@ export const CardMenu = ({ onClose }: { onClose: () => void }) => {
                                 required
                                 onChange={(e) => setNbElement(Number(e.target.value))}
                             />
-                            {Array.from({ length: nbElement }).map((_, i) => (
-                                <div key={i} className="mt-2 p-2 bg-gray-100 border rounded">
-                                    Élément {i + 1}
+                            <ScrollArea
+                                className="max-h-[300px] overflow-y-auto mt-4 border rounded-md p-4 scrollbar-thin scrollbar-thumb-red-400 scrollbar-track-gray-100"
+                            >
+                                <div className="space-y-4 pr-2">
+                                    {Array.from({ length: nbElement }).map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm"
+                                        >
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    Choisir une catégorie
+                                                </label>
+                                                <select
+                                                    name={`plat-${i}`}
+                                                    required
+                                                    className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                                                >
+                                                    <option value="">-- Sélectionner --</option>
+                                                    <option value="pizza">Pizza</option>
+                                                    <option value="burger">Burger</option>
+                                                    <option value="pasta">Pâtes</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    Choisir un plat
+                                                </label>
+                                                <select
+                                                    name={`accompagnement-${i}`}
+                                                    required
+                                                    className="w-full border bg-white border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                                                >
+                                                    <option value="">-- Sélectionner --</option>
+                                                    <option value="frites">Frites</option>
+                                                    <option value="salade">Salade</option>
+                                                    <option value="riz">Riz</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            </ScrollArea>
+
 
 
                             <div className="flex justify-end gap-2">
