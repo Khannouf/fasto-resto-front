@@ -21,9 +21,15 @@ export const CardMenu = ({ onClose }: { onClose: () => void }) => {
 
     const { toast } = useToast()
 
+    const elementInMenu = z.object({
+        idCategorie: z.number(),
+        idPlat: z.number(),
+    })
+
     const menuSchema = z.object({
         name: z.string(),
         price: z.number(),
+        elementInMenu: z.array(elementInMenu), 
     });
 
     type menuType = z.infer<typeof menuSchema>
@@ -39,7 +45,7 @@ export const CardMenu = ({ onClose }: { onClose: () => void }) => {
 
     const mutation = useMutation({
         mutationFn: (menu: menuType) =>
-            fetch(`${api}/categorie`, {
+            fetch(`${api}/menu`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -57,10 +63,10 @@ export const CardMenu = ({ onClose }: { onClose: () => void }) => {
     const handleSubmitForm = (data: menuType) => {
         mutation.mutate(data, {
             onSuccess: () => {
-                queryClient.invalidateQueries(["categories"]); // refetch
+                queryClient.invalidateQueries(["menu"]); // refetch
                 toast({
                     title: "Succès",
-                    description: "Catégorie ajoutée avec succès !",
+                    description: "Menu ajoutée avec succès !",
                     variant: "success", // Type "success"
                     duration: 1000, // Durée en ms
                     className: "bg-green-500 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
@@ -69,7 +75,7 @@ export const CardMenu = ({ onClose }: { onClose: () => void }) => {
             },
             onError: (error) => {
                 console.error("Erreur lors de l'ajout :", error);
-                alert("Une erreur est survenue lors de la création de la catégorie.");
+                alert("Une erreur est survenue lors de la création du menu.");
             }
         });
     };
