@@ -32,6 +32,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../components/ui/select";
+import { useToast } from "../hooks/use-toast";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -62,6 +63,7 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
     const [availableIngredients, setAvailableIngredients] = useState<Ingredient | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { toast } = useToast()
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -280,7 +282,13 @@ export const CardDishes = ({ onClose }: { onClose: () => void }) => {
             // 1️⃣ Envoie du plat
             mutationAddDish.mutate(formattedData, {
                 onSuccess: (dishResponse) => {
-                    console.log("Plat créé :", dishResponse);
+                  toast({
+                    title: "Succès",
+                    description: "Catégorie ajoutée avec succès !",
+                    variant: "success", // Type "success"
+                    duration: 1000, // Durée en ms
+                    className: "bg-green-500 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+                  });
                     
                     if (formattedData.image) {
                         console.log(formattedData.image);

@@ -7,12 +7,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserContext } from "../context/userContext";
 import { useMutation, useQueryClient } from "react-query";
+import { useToast } from "../hooks/use-toast";
 
 const api = import.meta.env.VITE_API_URL
 
 export const CardTable = ({ onClose }: { onClose: () => void }) => {
     const { user } = useUserContext();
     const token = user?.token
+
+    const { toast } = useToast()
 
     const TableSchema = z.object({
         numeroTable: z.number(),
@@ -50,6 +53,13 @@ export const CardTable = ({ onClose }: { onClose: () => void }) => {
         mutation.mutate(data, {
             onSuccess: () => {
                 queryClient.invalidateQueries(["tables"]); // refetch
+                toast({
+                  title: "Succès",
+                  description: "Table ajoutée avec succès !",
+                  variant: "success", // Type "success"
+                  duration: 1000, // Durée en ms
+                  className: "bg-green-500 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+                });
                 onClose(); // ferme uniquement si tout s’est bien passé
             },
             onError: (error) => {

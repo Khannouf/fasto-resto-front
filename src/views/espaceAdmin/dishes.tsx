@@ -5,6 +5,7 @@ import { useUserContext } from '../../context/userContext';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { columns } from '../../components/table/tableDish/columns';
 import { DataTable } from '../../components/ui/data-table';
+import { useToast } from "../../hooks/use-toast"; // Import du hook
 
 
 const api = import.meta.env.VITE_API_URL
@@ -16,6 +17,18 @@ export const Dishes = () => {
     const restaurantId = user?.restaurantId;
     const [showCard, setShowCard] = useState(false);
     const [pageSize, setPageSize] = useState(10);
+    const { toast } = useToast(); // Hook pour afficher le toast
+
+    const handleSuccessToast = () => {
+      toast({
+        title: "Success",
+        description: "Plat ajouté avec succès",
+        variant: "success", // Peut aussi être 'error', 'info', etc.
+        duration: 3000, // Durée du toast en ms
+      });
+      
+    };
+
 
     const deleteDishMutation = useMutation({
         mutationFn: async (id: number) => {
@@ -35,6 +48,13 @@ export const Dishes = () => {
 
         onSuccess: () => {
             queryClient.invalidateQueries(["dish", restaurantId]); // Force le refetch
+            toast({
+              title: "Succès",
+              description: "Plat supprimé avec succès !",
+              variant: "destructive", // Type "success"
+              duration: 1000, // Durée en ms
+              className: "bg-red-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+            });
         },
 
         onError: (error) => {

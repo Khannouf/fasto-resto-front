@@ -21,15 +21,15 @@ export const Category = () => {
 
   const { toast } = useToast(); // Hook pour afficher le toast
 
-  const handleSuccessToast = () => {
-    toast({
-      title: "Success",
-      description: "Catégorie ajoutée avec succès",
-      variant: "success", // Peut aussi être 'error', 'info', etc.
-      duration: 3000, // Durée du toast en ms
-    });
+  // const handleSuccessToast = () => {
+  //   toast({
+  //     title: "Success",
+  //     description: "Catégorie ajoutée avec succès",
+  //     variant: "success", // Peut aussi être 'error', 'info', etc.
+  //     duration: 3000, // Durée du toast en ms
+  //   });
     
-  };
+  // };
 
   const deleteCategoryMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -51,9 +51,9 @@ export const Category = () => {
       toast({
         title: "Succès",
         description: "Catégorie supprimé avec succès !",
-        variant: "success", // Type "success"
-        duration: 1000, // Durée en ms
-        className: "bg-green-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+        variant: "destructive", // Type "success"
+        duration: 3000, // Durée en ms
+        className: "bg-red-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
       });
       queryClient.invalidateQueries(["categories"]); // Force le refetch
     },

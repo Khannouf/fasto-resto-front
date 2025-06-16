@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useUserContext } from '../../context/userContext';
 import { Mosaic } from 'react-loading-indicators';
 import { CardTable } from '../../components/cardTable';
+import { useToast } from "../../hooks/use-toast";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -16,6 +17,7 @@ export const TablesView = () => {
     const restaurantId = user?.restaurantId
     const [showCard, setShowCard] = useState(false);
     const [pageSize, setPageSize] = useState(10);
+    const { toast } = useToast();
 
     const deleteTableMutation = useMutation({
         mutationFn: async (id: number) => {
@@ -35,6 +37,13 @@ export const TablesView = () => {
 
         onSuccess: () => {
             queryClient.invalidateQueries(["tables"]); // Force le refetch
+            toast({
+              title: "Succès",
+              description: "Table supprimé avec succès !",
+              variant: "success", // Type "success"
+              duration: 3000, // Durée en ms
+              className: "bg-red-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+            });
         },
 
         onError: (error) => {
