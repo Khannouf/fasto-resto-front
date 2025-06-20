@@ -20,6 +20,7 @@ import { Login } from "../views/espaceAccueil/login";
 import { Register } from "../views/espaceAccueil/register";
 import { Dishes } from "../views/espaceAdmin/dishes";
 import { Menus } from "../views/espaceAdmin/menu";
+import { SendCode } from "../views/espaceAccueil/sendCode";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -51,6 +52,9 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<LayoutNavbar />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/sendCode" element={<SendCode />}>
+            <Route path="/codeConfirm" element={<codeConfirm />} />
+          </Route>
         </Route>
       </Routes>
     </>

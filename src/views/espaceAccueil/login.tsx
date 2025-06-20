@@ -39,6 +39,8 @@ export const Login = () => {
     setLoginError(null); // Réinitialiser l'erreur à chaque tentative
 
     try {
+      console.log(`${api_url}/auth/login`);
+      
       const response = await fetch(`${api_url}/auth/login`, {
         method: "POST",
         headers: {
@@ -100,9 +102,9 @@ export const Login = () => {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Mot de passe
                 </label>
-                <a href="#" className="text-sm font-medium text-red-600 hover:text-red-500">
+                <Link to="/sendCode" className="text-sm font-medium text-red-600 hover:text-red-500">
                   Mot de passe oublié ?
-                </a>
+                </Link>
               </div>
               <div className="mt-1 relative">
                 <Input

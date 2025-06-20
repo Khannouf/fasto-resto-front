@@ -192,6 +192,15 @@ export interface LoginFormSchema {
   password: string,
 }
 
+export interface SendCodeSchema {
+  email: string,
+}
+
+export interface CodeSchema {
+  code: number,
+}
+
+
 export interface RegisterFormSchema {
   restaurantName: string,
   description: string,
