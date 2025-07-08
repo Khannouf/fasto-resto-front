@@ -4,30 +4,34 @@ import { Link } from "react-router-dom";
 import { ZodType, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginFormSchema, SendCodeSchema } from "../../types/type";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { SendCodeSchema, SendCodeType } from "../../types/type";
+import { Loader2 } from "lucide-react";
 import { useUserContext } from "../../context/userContext";
 
 const api_url = import.meta.env.VITE_API_URL;
 const front_url = import.meta.env.VITE_FRONT_URL;
 
-export const SendCode = () => {
-    const [emailError, setEmailError] = useState<string | null>(null);
+type SendCodeProps = {
+  /** Callback déclenchée quand la requête réussit (ou dès la soumission si tu préfères) */
+  onCodeSent?: (email: string) => void;
+};
 
-    const zodFormSchema: ZodType<SendCodeSchema> = z.object({
-        email: z.string().email({ message: "L'adresse e-mail n'est pas valide" }),
-    });
+export const SendCode = ({ onCodeSent }: SendCodeProps) => {
+    const [emailError, setEmailError] = useState<string | null>(null);
+    const [email, setEmail] = useState("")
+
 
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<SendCodeSchema>({ resolver: zodResolver(zodFormSchema) });
+    } = useForm<SendCodeType>({ resolver: zodResolver(SendCodeSchema) });
 
-    const handleSubmitForm = async (data: SendCodeSchema) => {
+    const handleSubmitForm = async (data: SendCodeType) => {
         setEmailError(null); // Réinitialiser l'erreur à chaque tentative
 
         try {
+            setEmail(data.email);
             const response = await fetch(`${api_url}/auth/reset-password`, {
                 method: "POST",
                 headers: {
@@ -41,9 +45,8 @@ export const SendCode = () => {
             if (!response.ok) {
                 throw new Error("Une erreur est survenue.");
             }
-
+            onCodeSent?.(data.email);
             const result = await response.json();
-            window.location.replace(front_url + "/admin/dashboard");
         } catch (error: any) {
             setEmailError(error.message); // Afficher l'erreur sous le bouton
         }

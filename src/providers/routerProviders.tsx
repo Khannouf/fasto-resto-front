@@ -21,6 +21,8 @@ import { Register } from "../views/espaceAccueil/register";
 import { Dishes } from "../views/espaceAdmin/dishes";
 import { Menus } from "../views/espaceAdmin/menu";
 import { SendCode } from "../views/espaceAccueil/sendCode";
+import { CodeConfirm } from "../views/espaceAccueil/codeConfirm";
+import { ForgotPassword } from "../views/espaceAccueil/forgotPassword";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -52,9 +54,8 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<LayoutNavbar />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/sendCode" element={<SendCode />}>
-            <Route path="/codeConfirm" element={<codeConfirm />} />
-          </Route>
+          <Route path="/send-code" element={<ForgotPassword />} />
+          <Route path="/code-confirm" element={<CodeConfirm />} />
         </Route>
       </Routes>
     </>

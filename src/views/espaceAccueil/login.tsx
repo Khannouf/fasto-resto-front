@@ -102,7 +102,7 @@ export const Login = () => {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Mot de passe
                 </label>
-                <Link to="/sendCode" className="text-sm font-medium text-red-600 hover:text-red-500">
+                <Link to="/send-code" className="text-sm font-medium text-red-600 hover:text-red-500">
                   Mot de passe oublié ?
                 </Link>
               </div>

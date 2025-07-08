@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export interface Image {
   id: number;
@@ -37,14 +37,13 @@ export interface Ingredient {
 
 export const ingredientSchema = z.object({
   id: z.number(),
-  name: z.string()
-})
+  name: z.string(),
+});
 
 export const apiResponseIngredientSchema = z.object({
   type: z.string(),
   data: z.array(ingredientSchema), // ✅ data est un tableau !
 });
-
 
 export interface SendIngredient {
   name: string;
@@ -142,7 +141,6 @@ export interface ScheduleDayRow {
   end: string;
 }
 
-
 export interface Schedule {
   id: number;
   restaurantId: number;
@@ -180,54 +178,68 @@ export const scheduleSchema = z.object({
   }),
 });
 
-
-
 export interface ApiResponseSchedules {
   type: string;
   data: Schedule;
 }
 
 export interface LoginFormSchema {
-  email: string,
-  password: string,
+  email: string;
+  password: string;
 }
 
-export interface SendCodeSchema {
-  email: string,
-}
+export const SendCodeSchema = z.object({
+  email: z.string().email({ message: "L'adresse e-mail n'est pas valide" }),
+});
+export type SendCodeType = z.infer<typeof SendCodeSchema>;
 
 export interface CodeSchema {
-  code: number,
+  code: string;
 }
 
+export const NewPasswordFormSchema = z.object({
+  password: z
+    .string()
+    .min(8, "Le mot de passe doit contenir au moins 8 caractères")
+    .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une majuscule")
+    .regex(
+      /[^a-zA-Z0-9]/,
+      "Le mot de passe doit contenir au moins un caractère spécial"
+    ),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Les mots de passe ne correspondent pas",
+  path: ["confirmPassword"]
+});
+export type NewPasswordFormType = z.infer<typeof NewPasswordFormSchema>;
 
 export interface RegisterFormSchema {
-  restaurantName: string,
-  description: string,
-  adresse: string, 
-  postalCode: number,
-  city: string,
-  phone: string,
-  email: string,
-  password: string,
-  confirmationPassword: string,
+  restaurantName: string;
+  description: string;
+  adresse: string;
+  postalCode: number;
+  city: string;
+  phone: string;
+  email: string;
+  password: string;
+  confirmationPassword: string;
 }
 
 export interface ConnectedUser {
-  token: string,
-  restaurantId: number,
-  actif: number
+  token: string;
+  restaurantId: number;
+  actif: number;
 }
 
 export interface DishFormSchema {
-  name: string,
-  description: string,
-  price: number,
-  ingredients: Ingredient,
-  img: string,
+  name: string;
+  description: string;
+  price: number;
+  ingredients: Ingredient;
+  img: string;
 }
 
 export interface ApiResponseIngredients {
   type: string;
-  data: Ingredient,
+  data: Ingredient;
 }
