@@ -99,55 +99,102 @@ const Accueil: React.FC = () => {
 
             {/* Pricing Section */}
             <motion.section
-                id="pricing"
-                className="pricing py-16 bg-gray-100 min-h-screen flex flex-col justify-center"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-            >
-                <div className="container mx-auto text-center">
-                    <h2 className="text-3xl font-bold mb-8">Nos Tarifs</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="pricing-card p-6 border rounded-lg bg-white shadow-lg">
-                            <h3 className="text-xl font-bold mb-4">Basic</h3>
-                            <p className="text-gray-600 mb-4">Idéal pour les petits restaurants.</p>
-                            <p className="text-2xl font-bold mb-4">€19/mois</p>
-                            <motion.button
-                                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                Choisir
-                            </motion.button>
-                        </div>
-                        <div className="pricing-card p-6 border rounded-lg bg-white shadow-lg">
-                            <h3 className="text-xl font-bold mb-4">Pro</h3>
-                            <p className="text-gray-600 mb-4">Pour les restaurants en pleine croissance.</p>
-                            <p className="text-2xl font-bold mb-4">€49/mois</p>
-                            <motion.button
-                                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                Choisir
-                            </motion.button>
-                        </div>
-                        <div className="pricing-card p-6 border rounded-lg bg-white shadow-lg">
-                            <h3 className="text-xl font-bold mb-4">Enterprise</h3>
-                            <p className="text-gray-600 mb-4">Pour les grandes chaînes de restaurants.</p>
-                            <p className="text-2xl font-bold mb-4">€99/mois</p>
-                            <motion.button
-                                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                Choisir
-                            </motion.button>
-                        </div>
-                    </div>
-                </div>
-            </motion.section >
+    id="pricing"
+    className="pricing py-16 bg-gray-100 min-h-screen flex flex-col justify-center"
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+    viewport={{ once: true }}
+>
+    <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-8">Nos Tarifs</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Basic Plan */}
+            <div className="pricing-card p-6 border rounded-lg bg-white shadow-lg">
+                <h3 className="text-xl font-bold mb-4">Basic</h3>
+                <p className="text-gray-600 mb-4">Idéal pour les petits restaurants.</p>
+                <p className="text-2xl font-bold mb-4">€19/mois</p>
+                <ul className="text-left mb-4">
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Création de menus
+                    </li>
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Génération de QR codes
+                    </li>
+                    <li className="flex items-center mb-2">
+                        <span className="text-red-500 mr-2">✗</span> Plus de choix de templates et couleurs
+                    </li>
+                    <li className="flex items-center">
+                        <span className="text-red-500 mr-2">✗</span> Gestion des stocks
+                    </li>
+                </ul>
+                <motion.button
+                    className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    Choisir
+                </motion.button>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="pricing-card p-6 border rounded-lg bg-white shadow-lg">
+                <h3 className="text-xl font-bold mb-4">Pro</h3>
+                <p className="text-gray-600 mb-4">Pour les restaurants en pleine croissance.</p>
+                <p className="text-2xl font-bold mb-4">€49/mois</p>
+                <ul className="text-left mb-4">
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Création de menus
+                    </li>
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Génération de QR codes
+                    </li>
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Plus de choix de templates et couleurs
+                    </li>
+                    <li className="flex items-center">
+                        <span className="text-red-500 mr-2">✗</span> Gestion des stocks
+                    </li>
+                </ul>
+                <motion.button
+                    className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    Choisir
+                </motion.button>
+            </div>
+
+            {/* Enterprise Plan */}
+            <div className="pricing-card p-6 border rounded-lg bg-white shadow-lg">
+                <h3 className="text-xl font-bold mb-4">Enterprise</h3>
+                <p className="text-gray-600 mb-4">Pour les grandes chaînes de restaurants.</p>
+                <p className="text-2xl font-bold mb-4">€99/mois</p>
+                <ul className="text-left mb-4">
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Création de menus
+                    </li>
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Génération de QR codes
+                    </li>
+                    <li className="flex items-center mb-2">
+                        <span className="text-green-500 mr-2">✓</span> Plus de choix de templates et couleurs
+                    </li>
+                    <li className="flex items-center">
+                        <span className="text-green-500 mr-2">✓</span> Gestion des stocks
+                    </li>
+                </ul>
+                <motion.button
+                    className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    Choisir
+                </motion.button>
+            </div>
+        </div>
+    </div>
+</motion.section>
 
             {/* Demo Section */}
             <motion.section

@@ -128,6 +128,7 @@ export interface CartContextType extends CartState {
   removeDish: (dishId: number) => void;
   addMenu: (menu: Menu) => void;
   removeMenu: (menuId: number) => void;
+  verifPrice: () => Promise<void>; // Ajout de la méthode verifPrice
 }
 
 export interface TablesRestaurant {

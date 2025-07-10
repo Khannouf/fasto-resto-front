@@ -1,38 +1,72 @@
-import { ArrowLeft } from 'lucide-react'
-import { useRef  } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { useCart } from '../../context/cartContext'
-import { ScrollArea } from '../../components/ui/scroll-area'
-import { Separator } from "../../components/ui/separator";
-import RecapCardItem from '../../components/recapCardItem'
+import { ArrowLeft } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useCart } from '../../context/cartContext';
+import { ScrollArea } from '../../components/ui/scroll-area';
+import { Separator } from '../../components/ui/separator';
+import RecapCardItem from '../../components/recapCardItem';
+import { ApiResponseDish } from '../../types/type';
+
+const api = import.meta.env.VITE_API_URL;
 
 export const RecapBeforeOrder = () => {
-    const { dishes, menus, total, addComment } = useCart()
-    const params = useParams()
+    const { dishes, menus, total, addComment, verifPrice } = useCart();
+    const params = useParams();
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const commentRef = useRef<HTMLTextAreaElement>(null);
 
     const handleButton = () => {
         const commentValue = commentRef.current?.value; // Récupère la valeur au moment du clic
-        if (commentValue){
-            addComment(commentValue)
-            
-        } else( 
-            console.log("le commentaire n'est pas passé")
-            
-        )
+        if (commentValue) {
+            addComment(commentValue);
+        } else {
+            console.log('le commentaire n\'est pas passé');
+        }
     };
+
+    // const verifPrice = () => {
+    //     let totalVerif = 0
+    //     dishes.map(async (dishContext) => {
+    //         try {
+    //             const response = await fetch(`${api}/dishes/${dishContext.dish.price}`);
+    //             if (!response.ok)
+    //                 throw new Error("Erreur lors de la récupération des données");
+    //             const data: ApiResponseDish = await response.json();
+    //             totalVerif = totalVerif + (dishContext.dish.price * dishContext.quantity)
+    //         } catch (err) {
+    //             setError((err as Error).message);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+    //     )
+        
+    // }
+
+    useEffect(() => {
+        verifPrice()
+    }, [])
+    
+
 
     return (
         <>
-            <div className="absolute top-5 left-5 bg-[#e3e2e2] h-10 w-10 flex items-center justify-center rounded-full shadow-lg z-10">
+            {/* Back Button */}
+            <div className="absolute top-4 left-4 bg-gray-200 h-10 w-10 flex items-center justify-center rounded-full shadow-md z-10">
                 <Link to={`/restaurant/${params.idResto}/menu`} className="text-black">
                     <ArrowLeft />
                 </Link>
             </div>
-            <div className="absolute inset-0 m-4 flex flex-col justify-center items-center">
-                <div className="absolute top-4 text-center text-xl font-bold">Ma commande :</div>
-                <div className='w-full h-[60vh] fixed top-16 flex items-center justify-start'>
+
+            {/* Main Content */}
+            <div className="absolute inset-0 flex flex-col justify-between items-center px-4">
+                {/* Title */}
+                <div className="text-center text-xl font-bold mt-6 mb-4">Ma commande</div>
+
+                {/* Scrollable Area */}
+                <div className="w-full h-[55vh] flex items-start justify-start overflow-hidden rounded-lg shadow-md bg-white">
                     <ScrollArea className="w-full h-full">
                         <div className="flex flex-col gap-4 p-4">
                             {dishes.map((dishContext, index) => (
@@ -51,32 +85,39 @@ export const RecapBeforeOrder = () => {
                         </div>
                     </ScrollArea>
                 </div>
-                <div className="fixed bottom-0 w-full bg-white p-4 shadow-lg">
-                    <div className="mb-4">
-                        <h2 className="text-lg font-semibold mb-2">Ajouter un commentaire :</h2>
-                        <textarea
-                            id="comment"
-                            name="comment"
-                            className="w-full bg-gray-200 rounded-xl p-2"
-                            placeholder="Ajouter des instructions ou préférences..."
-                            ref={commentRef}
-                        />
-                    </div>
 
-                    <Separator className="w-full bg-black h-2" />
+                {/* Comment Section */}
+                <div className="w-full bg-white p-4 rounded-lg shadow-md mt-4">
+                    <h2 className="text-lg font-semibold mb-2">Ajouter un commentaire :</h2>
+                    <textarea
+                        id="comment"
+                        name="comment"
+                        className="w-full bg-gray-100 rounded-lg p-3 text-sm"
+                        placeholder="Ajouter des instructions ou préférences..."
+                        ref={commentRef}
+                    />
+                </div>
 
-                    <div className="mt-5 flex justify-between items-center">
-                        <p className="text-3xl font-bold">{total} €</p>
-                        <button className="bg-red-400 rounded-full px-6 py-2 text-xl font-semibold" onClick={() => (handleButton())}>
+                {/* Separator */}
+                <Separator className="w-full bg-gray-300 h-[1px] my-4" />
+
+                {/* Footer Section */}
+                {loading ?(
+                    <></>
+                ): (
+                <div className="w-full bg-white p-4 rounded-lg shadow-md flex flex-col gap-4">
+                    <div className="flex justify-between items-center">
+                        <p className="text-2xl font-bold">{total} €</p>
+                        <button
+                            className="bg-red-500 text-white rounded-full px-6 py-3 text-lg font-semibold shadow-md hover:bg-red-600"
+                            onClick={() => handleButton()}
+                        >
                             Valider
                         </button>
                     </div>
                 </div>
-
+                )}
             </div>
-
-
-
         </>
-    )
-}
+    );
+};

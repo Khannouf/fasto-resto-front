@@ -7,27 +7,29 @@ import {
   DishCartContext,
 } from "../types/type";
 
+const api = import.meta.env.VITE_API_URL;
+
 // Définition des actions possibles
 type CartAction =
   | { type: "ADD_COMMENT"; payload: string }
   | { type: "ADD_DISH"; payload: Dish }
   | { type: "REMOVE_DISH"; payload: number }
   | { type: "ADD_MENU"; payload: Menu }
-  | { type: "REMOVE_MENU"; payload: number };
+  | { type: "REMOVE_MENU"; payload: number }
+  | { type: "SET_TOTAL"; payload: number }; // Action pour mettre à jour le total
 
 // Reducer pour gérer l'état du panier
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case "ADD_COMMENT": {
-      const comment = action.payload;
       return {
         ...state,
-        comment: comment,
+        comment: action.payload,
       };
     }
-    case "ADD_DISH":
-      // Vérifie si le plat existe déjà dans le panier
-      { const existingDishIndex = state.dishes.findIndex(
+
+    case "ADD_DISH": {
+      const existingDishIndex = state.dishes.findIndex(
         (d) => d.dish.id === action.payload.id
       );
 
@@ -56,15 +58,18 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         ...state,
         dishes: updatedDishes,
         total: newTotalAddDish,
-      }; }
+      };
+    }
 
     case "REMOVE_DISH": {
       const dishIndex = action.payload; // L'index du plat à supprimer
       const removedDish = state.dishes[dishIndex];
       if (!removedDish) return state; // Sécurité : si le plat n'existe pas
+
       const newTotalRemoveDish = parseFloat(
         (state.total - removedDish.dish.price).toFixed(2)
       );
+
       let updatedDishes;
       if (removedDish.quantity > 1) {
         // Si la quantité est > 1, on décrémente seulement
@@ -85,17 +90,19 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       };
     }
 
-    case "ADD_MENU":
-      { const newTotalAddMenu = parseFloat(
+    case "ADD_MENU": {
+      const newTotalAddMenu = parseFloat(
         (state.total + action.payload.price).toFixed(2)
       );
       return {
         ...state,
         menus: [...state.menus, action.payload],
         total: newTotalAddMenu,
-      }; }
-    case "REMOVE_MENU":
-      { const removedMenu = state.menus.find(
+      };
+    }
+
+    case "REMOVE_MENU": {
+      const removedMenu = state.menus.find(
         (menu) => menu.id === action.payload
       );
       const newTotalRemoveMenu = parseFloat(
@@ -105,7 +112,16 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         ...state,
         menus: state.menus.filter((menu) => menu.id !== action.payload),
         total: newTotalRemoveMenu,
-      }; }
+      };
+    }
+
+    case "SET_TOTAL": {
+      return {
+        ...state,
+        total: action.payload,
+      };
+    }
+
     default:
       return state;
   }
@@ -125,6 +141,29 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
+  // Fonction pour vérifier les prix et mettre à jour le total
+  const verifPrice = async () => {
+    let totalVerif = 0;
+
+    await Promise.all(
+      state.dishes.map(async (dishContext) => {
+        try {
+          const response = await fetch(`${api}/dishes/${dishContext.dish.id}`);
+          if (!response.ok) throw new Error("Erreur lors de la récupération des données");
+          const data = await response.json();
+
+          // Ajoute le prix récupéré multiplié par la quantité au total
+          totalVerif += data.data.price * dishContext.quantity;
+        } catch (err) {
+          console.error("Erreur dans verifPrice :", err);
+        }
+      })
+    );
+
+    // Met à jour le total dans le reducer
+    dispatch({ type: "SET_TOTAL", payload: parseFloat(totalVerif.toFixed(2)) });
+  };
+
   // Définition des fonctions du contexte
   const addComment = (comment: string) =>
     dispatch({ type: "ADD_COMMENT", payload: comment });
@@ -137,7 +176,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ ...state, addComment, addDish, removeDish, addMenu, removeMenu }}
+      value={{
+        ...state,
+        addComment,
+        addDish,
+        removeDish,
+        addMenu,
+        removeMenu,
+        verifPrice, // Expose la fonction verifPrice dans le contexte
+      }}
     >
       {children}
     </CartContext.Provider>
