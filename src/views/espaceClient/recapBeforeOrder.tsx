@@ -26,28 +26,9 @@ export const RecapBeforeOrder = () => {
         }
     };
 
-    // const verifPrice = () => {
-    //     let totalVerif = 0
-    //     dishes.map(async (dishContext) => {
-    //         try {
-    //             const response = await fetch(`${api}/dishes/${dishContext.dish.price}`);
-    //             if (!response.ok)
-    //                 throw new Error("Erreur lors de la récupération des données");
-    //             const data: ApiResponseDish = await response.json();
-    //             totalVerif = totalVerif + (dishContext.dish.price * dishContext.quantity)
-    //         } catch (err) {
-    //             setError((err as Error).message);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
-    //     )
-        
-    // }
-
     useEffect(() => {
         verifPrice()
-    }, [])
+    }, [dishes, total])
     
 
 
