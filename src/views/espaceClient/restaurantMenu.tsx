@@ -142,7 +142,7 @@ function RestaurantMenu() {
       ) : (
         <>
           <div className="bg-[#D9D9D9] w-full h-12 fixed top-0 flex items-center justify-start">
-            <Link to={`/restaurant/${params.idResto}`} className="text-black">
+            <Link to={`/restaurant/${params.idResto}/${params.idTable}`} className="text-black">
               <ArrowLeft className="ml-5" />
             </Link>
             <p className="text-xl font-bold ml-5 mb-1">
@@ -181,6 +181,7 @@ function RestaurantMenu() {
                     <CardItem
                       key={dish.id}
                       idResto={params.idResto!}
+                      idTable={params.idTable}
                       idElement={dish.id}
                       imageUrl={dish.imageUrl}
                       name={dish.name}

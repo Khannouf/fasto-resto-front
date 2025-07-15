@@ -31,13 +31,13 @@ const AppContent: React.FC = () => {
   return (
     <>
       <Routes>
-        <Route path="/restaurant/:idResto" element={<LayoutWithBottomBar />}>
+        <Route path="/restaurant/:idResto/:idTable" element={<LayoutWithBottomBar />}>
           <Route index element={<FirstStep />} />
           <Route path="menu" element={<RestaurantMenu />} />
-          <Route path=":idElement" element={<DetailDish />} />
+          <Route path="element/:idElement" element={<DetailDish />} />
         </Route>
         <Route
-          path="/order/:idResto/recapBeforeOrder"
+          path="/order/:idResto/:idTable/recapBeforeOrder"
           element={<RecapBeforeOrder />}
         ></Route>
         <Route path="/admin" element={<LayoutSidebar />}>

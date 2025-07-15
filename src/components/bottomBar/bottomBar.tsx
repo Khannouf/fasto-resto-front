@@ -9,6 +9,7 @@ const BottomBar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { dishes, menus, removeDish, total } = useCart();
   const location = useLocation();
+  const params = useParams()
   const idRestoUrl = location.pathname.split('/')    
   const idResto = idRestoUrl[2];
   
@@ -17,6 +18,8 @@ const BottomBar: React.FC = () => {
   const handleButton = () => {
     setIsExpanded(!isExpanded);
     console.log("dishes: " + dishes);
+    console.log("table : " + params.idTable);
+    
   };
 
   return (
@@ -73,7 +76,7 @@ const BottomBar: React.FC = () => {
               <Separator />
               <div className="w-full justify-end items-end text-end">
                 <div className="h-10 text-2xl font-bold mt-4 mr-4">{total} €</div>
-                <Link to={`/order/${idResto}/recapBeforeOrder`} onClick={() => (setIsExpanded(!isExpanded))}>
+                <Link to={`/order/${idResto}/${params.idTable}/recapBeforeOrder`} onClick={() => (setIsExpanded(!isExpanded))}>
                   <button className="w-full text-white font-semibold flex items-center justify-center gap-x-2">
                     <Check /> Commander
                   </button>

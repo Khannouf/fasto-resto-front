@@ -5,11 +5,13 @@ import { useCart } from '../../context/cartContext';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Separator } from '../../components/ui/separator';
 import RecapCardItem from '../../components/recapCardItem';
-import { ApiResponseDish } from '../../types/type';
+import { ApiResponseDish, orderBodyType } from '../../types/type';
+import { useMutation, useQueryClient } from 'react-query';
 
 const api = import.meta.env.VITE_API_URL;
 
 export const RecapBeforeOrder = () => {
+    const queryClient = useQueryClient();
     const { dishes, menus, total, addComment, verifPrice } = useCart();
     const params = useParams();
     const [error, setError] = useState("")
@@ -17,7 +19,38 @@ export const RecapBeforeOrder = () => {
 
     const commentRef = useRef<HTMLTextAreaElement>(null);
 
+    // const mutation = useMutation({
+    //     mutationFn: (order: orderBodyType) => {
+
+    //     }
+    // })
+
     const handleButton = () => {
+
+        verifPrice()
+        const orderFetchBody: orderBodyType = {
+            total: total, // Total provenant de votre calcul ou contexte
+            state: "a payer", // État de la commande
+            tableId: Number(params.tableId), // Conversion de tableId en nombre
+            orderJoin: {
+                menu: menus.map((menu) => ({
+                    id: menu.id,
+                    name: menu.name,
+                    price: menu.price,
+                    nbelement: menu.nbelement,
+                    dish: menu.dish.map((dish) => ({
+                        dishId: dish.dishId,
+                        configuration: dish.configuration,
+                    })),
+                })), // Transformation des menus en structure conforme à `orderBodyType`
+                dish: dishes.map((dishContext) => ({
+                    id: dishContext.dish.id,
+                    nbelement: dishContext.nbElement,
+                })), // Transformation des plats en structure conforme à `orderBodyType`
+            },
+        };
+        console.log(orderFetchBody);
+        
         const commentValue = commentRef.current?.value; // Récupère la valeur au moment du clic
         if (commentValue) {
             addComment(commentValue);
@@ -29,14 +62,14 @@ export const RecapBeforeOrder = () => {
     useEffect(() => {
         verifPrice()
     }, [dishes, total])
-    
+
 
 
     return (
         <>
             {/* Back Button */}
             <div className="absolute top-4 left-4 bg-gray-200 h-10 w-10 flex items-center justify-center rounded-full shadow-md z-10">
-                <Link to={`/restaurant/${params.idResto}/menu`} className="text-black">
+                <Link to={`/restaurant/${params.idResto}/${params.idTable}/menu`} className="text-black">
                     <ArrowLeft />
                 </Link>
             </div>
@@ -83,20 +116,20 @@ export const RecapBeforeOrder = () => {
                 <Separator className="w-full bg-gray-300 h-[1px] my-4" />
 
                 {/* Footer Section */}
-                {loading ?(
+                {loading ? (
                     <></>
-                ): (
-                <div className="w-full bg-white p-4 rounded-lg shadow-md flex flex-col gap-4">
-                    <div className="flex justify-between items-center">
-                        <p className="text-2xl font-bold">{total} €</p>
-                        <button
-                            className="bg-red-500 text-white rounded-full px-6 py-3 text-lg font-semibold shadow-md hover:bg-red-600"
-                            onClick={() => handleButton()}
-                        >
-                            Valider
-                        </button>
+                ) : (
+                    <div className="w-full bg-white p-4 rounded-lg shadow-md flex flex-col gap-4">
+                        <div className="flex justify-between items-center">
+                            <p className="text-2xl font-bold">{total} €</p>
+                            <button
+                                className="bg-red-500 text-white rounded-full px-6 py-3 text-lg font-semibold shadow-md hover:bg-red-600"
+                                onClick={() => handleButton()}
+                            >
+                                Valider
+                            </button>
+                        </div>
                     </div>
-                </div>
                 )}
             </div>
         </>

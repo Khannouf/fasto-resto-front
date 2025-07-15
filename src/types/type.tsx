@@ -244,3 +244,44 @@ export interface ApiResponseIngredients {
   type: string;
   data: Ingredient;
 }
+
+// Schéma pour un menu
+const menuSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  price: z.number(),
+  nbelement: z.number(),
+  dish: z.array(
+    z.object({
+      dishId: z.number(),
+      configuration: z.number(),
+    })
+  ),
+});
+
+export const orderBody = z.object({
+  total: z.number(),
+  state: z.string(),
+  tableId: z.number(),
+  orderJoin: z
+    .object({
+      menu: z.optional(z.array(menuSchema)), // Menu est optionnel
+      dish: z.optional(
+        z.array(
+          z.object({
+            id: z.number(),
+            nbelement: z.number(),
+          })
+        )
+      ), // Dish est optionnel
+    })
+    .refine(
+      (data) => data.menu?.length || data.dish?.length, // Vérifie qu'au moins un des deux est présent
+      {
+        message: "Au moins un menu ou un plat doit être présent.",
+        path: ["orderJoin"], // Indique où l'erreur se produit
+      }
+    ),
+});
+
+export type orderBodyType = z.infer<typeof orderBody>

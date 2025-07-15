@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { motion } from "framer-motion";
-import {  z } from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserContext } from "../context/userContext";
@@ -54,11 +54,11 @@ export const CardCategory = ({ onClose }: { onClose: () => void }) => {
             onSuccess: () => {
                 queryClient.invalidateQueries(["categories"]); // refetch
                 toast({
-                  title: "Succès",
-                  description: "Catégorie ajoutée avec succès !",
-                  variant: "success", // Type "success"
-                  duration: 1000, // Durée en ms
-                  className: "bg-green-500 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+                    title: "Succès",
+                    description: "Catégorie ajoutée avec succès !",
+                    variant: "success", // Type "success"
+                    duration: 1000, // Durée en ms
+                    className: "bg-green-500 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
                 });
                 onClose(); // ferme uniquement si tout s’est bien passé
             },

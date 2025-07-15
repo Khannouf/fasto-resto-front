@@ -13,6 +13,7 @@ import {
 } from "../../types/type";
 import { useCart } from "../../context/cartContext";
 import { Skeleton } from "../../components/ui/skeleton";
+import { useToast } from "../../hooks/use-toast";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -69,7 +70,8 @@ const DetailDish = () => {
   const [dish, setDish] = useState<Dish | null>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
+  const {toast} = useToast()
 
   useEffect(() => {
     const fetchDish = async () => {
@@ -90,37 +92,31 @@ const DetailDish = () => {
     fetchDish();
   }, [params.idElement]);
 
-  const item = {
-    id: 1,
-    imageUrl: pizzaImg,
-    name: "Pizza Margherita",
-    description:
-      "Pizza traditionnelle avec sauce tomate, mozzarella et basilic.",
-    categorieid: 1,
-    price: 9.99,
-    ingredients: [
-      { ingredientId: 1, quantity: "1" },
-      { ingredientId: 2, quantity: "2" },
-    ],
+  const handleButton = async () => {
+    if (dish) {
+      try {
+        await addDish(dish);
+        toast({
+          title: "Succès",
+          description: "Plat ajouté au panier avec succès !",
+          variant: "success", // Type "success"
+          duration: 1000, // Durée en ms
+          className: "bg-green-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+        });
+      } catch (error) {
+        // Affiche un toast d'erreur si addDish échoue
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue lors de l'ajout du plat.",
+          variant: "destructive", // Type "error"
+          duration: 1000, // Durée en ms
+          className: "bg-red-700 text-white p-4 rounded-lg shadow-lg font-semibold ", // Classes Tailwind
+        });
+        console.error("Erreur lors de l'ajout du plat :", error);
+      }
+    }
+
   };
-
-  const ingredients = [
-    {
-      id: 1,
-      name: "tomates",
-    },
-    {
-      id: 2,
-      name: "fromage",
-    },
-  ];
-  const handleButton = () => {
-    if(dish){
-      
-      addDish(dish);
-    }  
-
-};
 
   return (
     <>
@@ -137,7 +133,7 @@ const DetailDish = () => {
             />
             <div className="absolute top-5 left-5 bg-[#e3e2e2] h-10 w-10 flex items-center justify-center rounded-full shadow-lg z-10">
               <Link
-                to={`/restaurant/${params.idResto}/menu`}
+                to={`/restaurant/${params.idResto}/${params.idTable}/menu`}
                 className="text-black"
               >
                 <ArrowLeft />
@@ -146,7 +142,7 @@ const DetailDish = () => {
           </div>
 
           {/* Contenu */}
-          <div className="w-full flex flex-col gap-4 p-5 mt-5 rounded-t-3xl">
+          <div className="w-full flex flex-col gap-4 p-5 mt-5 rounded-t-3xl"> 
             {/* Nom et prix */}
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold">{dish?.name}</h1>
@@ -183,8 +179,8 @@ const DetailDish = () => {
             </div>
             {/* Bouton Ajouter au panier */}
             <Button className="w-full bg-green-500 text-white text-lg py-6 rounded-xl mt-4" onClick={handleButton}>
-                    Ajouter au panier
-                </Button>
+              Ajouter au panier
+            </Button>
           </div>
 
           <div className="w-full h-28 flex items-center justify-start bg-white"></div>

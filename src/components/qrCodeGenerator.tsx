@@ -6,7 +6,7 @@ const api = import.meta.env.VITE_FRONT_URL
 const QRCodeGenerator = () => {
 
     const params = useParams()
-    const url = `${api}/restaurant/${params.idResto}?tableId=${params.numTable}`;
+    const url = `${api}/restaurant/${params.idResto}/${params.numTable}`;
 
     return (
         <div className="flex flex-col items-center gap-3">
