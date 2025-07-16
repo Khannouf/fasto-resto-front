@@ -24,6 +24,7 @@ import { SendCode } from "../views/espaceAccueil/sendCode";
 import { CodeConfirm } from "../views/espaceAccueil/codeConfirm";
 import { ForgotPassword } from "../views/espaceAccueil/forgotPassword";
 import Accueil from "../views/espaceAccueil/accueil";
+import RecapAfterOrder from "../views/espaceClient/recapAfterOrder";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -39,6 +40,10 @@ const AppContent: React.FC = () => {
         <Route
           path="/order/:idResto/:idTable/recapBeforeOrder"
           element={<RecapBeforeOrder />}
+        ></Route>
+        <Route
+          path="/order/:idResto/:idTable/recapAfterOrder"
+          element={<RecapAfterOrder />}
         ></Route>
         <Route path="/admin" element={<LayoutSidebar />}>
           <Route path="dashboard" element={<Dashboard />} />

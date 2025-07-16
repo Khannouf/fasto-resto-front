@@ -285,3 +285,16 @@ export const orderBody = z.object({
 });
 
 export type orderBodyType = z.infer<typeof orderBody>
+
+export interface ApiResponseOrder {
+  type: string,
+  data:{
+    id: number,
+    sequentialId: number,
+    restaurantId: number,
+    total: number,
+    state: string,
+    createdAt: Date,
+    updatedAt: Date,
+  }
+}

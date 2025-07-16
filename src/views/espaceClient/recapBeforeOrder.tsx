@@ -1,11 +1,11 @@
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../../context/cartContext';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Separator } from '../../components/ui/separator';
 import RecapCardItem from '../../components/recapCardItem';
-import { ApiResponseDish, orderBodyType } from '../../types/type';
+import { ApiResponseDish, ApiResponseOrder, orderBodyType } from '../../types/type';
 import { useMutation, useQueryClient } from 'react-query';
 
 const api = import.meta.env.VITE_API_URL;
@@ -14,16 +14,27 @@ export const RecapBeforeOrder = () => {
     const queryClient = useQueryClient();
     const { dishes, menus, total, addComment, verifPrice } = useCart();
     const params = useParams();
+    const navigate = useNavigate()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
+
     const commentRef = useRef<HTMLTextAreaElement>(null);
 
-    // const mutation = useMutation({
-    //     mutationFn: (order: orderBodyType) => {
+    const mutation = useMutation({
+        mutationFn: (order: orderBodyType) =>
+            fetch(`${api}/order/${params.idResto}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(order)
+            }).then((res) => res.json()),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["categories"]);
+        },
 
-    //     }
-    // })
+    })
 
     const handleButton = () => {
 
@@ -31,7 +42,7 @@ export const RecapBeforeOrder = () => {
         const orderFetchBody: orderBodyType = {
             total: total, // Total provenant de votre calcul ou contexte
             state: "a payer", // État de la commande
-            tableId: Number(params.tableId), // Conversion de tableId en nombre
+            tableId: Number(params.idTable), // Conversion de tableId en nombre
             orderJoin: {
                 menu: menus.map((menu) => ({
                     id: menu.id,
@@ -50,7 +61,29 @@ export const RecapBeforeOrder = () => {
             },
         };
         console.log(orderFetchBody);
-        
+        mutation.mutate(orderFetchBody, {
+            onSuccess: (data: ApiResponseOrder) => {
+
+                console.log("resultats reussis : " + data);
+                localStorage.setItem("OrderNumber", data.data.sequentialId.toString())
+                localStorage.setItem("OrderId", data.data.id.toString())
+
+                queryClient.invalidateQueries(["categories"]); // refetch
+                navigate(`/order/${params.idResto}/${params.tableId}/recapAfterOrder`
+                //     , {
+                //     state: {
+                //         orderNumber: data.data.sequentialId,
+                //         orderId: data.data.id,
+                //     },
+                // }
+            )
+            },
+            onError: (error) => {
+                console.error("Erreur lors de l'ajout :", error);
+                alert("Une erreur est survenue lors de la création de la commande.");
+            }
+        })
+
         const commentValue = commentRef.current?.value; // Récupère la valeur au moment du clic
         if (commentValue) {
             addComment(commentValue);

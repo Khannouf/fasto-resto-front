@@ -91,6 +91,7 @@ const DetailDish = () => {
 
     fetchDish();
   }, [params.idElement]);
+  
 
   const handleButton = async () => {
     if (dish) {
