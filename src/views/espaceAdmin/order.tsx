@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 import { CardDishes } from '../../components/cardDishes';
 import { useUserContext } from '../../context/userContext';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { columns } from '../../components/table/tableDish/columns';
+import { columns } from '../../components/table/tableOrder/columns';
 import { DataTable } from '../../components/ui/data-table';
 import { useToast } from "../../hooks/use-toast"; // Import du hook
 
 
 const api = import.meta.env.VITE_API_URL
 
-export const Dishes = () => {
+export const Orders = () => {
     const queryClient = useQueryClient()
     const { user } = useUserContext();
     const token = user?.token
@@ -20,19 +20,19 @@ export const Dishes = () => {
     const { toast } = useToast(); // Hook pour afficher le toast
 
     const handleSuccessToast = () => {
-      toast({
-        title: "Success",
-        description: "Plat ajouté avec succès",
-        variant: "success", // Peut aussi être 'error', 'info', etc.
-        duration: 3000, // Durée du toast en ms
-      });
-      
+        toast({
+            title: "Success",
+            description: "Plat ajouté avec succès",
+            variant: "success", // Peut aussi être 'error', 'info', etc.
+            duration: 3000, // Durée du toast en ms
+        });
+
     };
 
 
-    const deleteDishMutation = useMutation({
+    const deleteOrderMutation = useMutation({
         mutationFn: async (id: number) => {
-            const response = await fetch(`${api}/dishes/${id}`, {
+            const response = await fetch(`${api}/order/${id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -47,47 +47,80 @@ export const Dishes = () => {
         },
 
         onSuccess: () => {
-            queryClient.invalidateQueries(["dish", restaurantId]); // Force le refetch
+            queryClient.invalidateQueries(["order", restaurantId]); // Force le refetch
             toast({
-              title: "Succès",
-              description: "Plat supprimé avec succès !",
-              variant: "destructive", // Type "success"
-              duration: 1000, // Durée en ms
-              className: "bg-red-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+                title: "Succès",
+                description: "Commande supprimé avec succès !",
+                variant: "destructive", // Type "success"
+                duration: 1000, // Durée en ms
+                className: "bg-red-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
             });
         },
 
         onError: (error) => {
             console.error("Erreur lors de la suppression :", error);
-            alert("Impossible de supprimer la catégorie.");
+            alert("Impossible de supprimer la commande.");
         },
     });
 
+    const updateStateOrderMutation = useMutation({
+        mutationFn: async (id: number) => {
+            const response = await fetch(`${api}/order/updateState/${id}`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json", // Ajout du Content-Type pour indiquer un JSON
+                },
+                body: JSON.stringify({
+                    state: "en préparation", // Corps de la requête
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Échec de la modification");
+            }
+    
+            return await response.json();
+        },
+    
+        onSuccess: () => {
+            queryClient.invalidateQueries(["order", restaurantId]); // Force le refetch
+            toast({
+                title: "Succès",
+                description: "Commande modifiée avec succès !",
+                variant: "success", // Type "success"
+                duration: 1000, // Durée en ms
+                className: "bg-green-700 text-white p-4 rounded-lg shadow-lg font-semibold", // Classes Tailwind
+            });
+        },
+    
+        onError: (error) => {
+            console.error("Erreur lors de la modification :", error);
+            alert("Impossible de modifier la commande.");
+        },
+    });
 
-    const deleteDish = (id: number) => {
-        deleteDishMutation.mutate(id)
+    const updateStateOrder = (id: number) => {
+        updateStateOrderMutation.mutate(id)
     };
 
 
-    const getCategories = async (idRestaurant: number) => {
-        const response = await fetch(`${api}/categorie/restaurant/${idRestaurant}`);
+    const deleteOrder = (id: number) => {
+        deleteOrderMutation.mutate(id)
+    };
+
+
+    const getOrders = async (idRestaurant: number) => {
+        const response = await fetch(`${api}/order/restaurant/${restaurantId}`);
         if (!response.ok) {
-            throw new Error("Erreur lors de la récupération des plats");
+            throw new Error("Erreur lors de la récupération des commandes");
         }
         return response.json();
     };
 
-    const getDishes = async (idRestaurant: number) => {
-        const response = await fetch(`${api}/dishes/allByRestaurant/${idRestaurant}`);
-        if (!response.ok) {
-            throw new Error("Erreur lors de la récupération des plats");
-        }
-        return response.json();
-    };
-
-    const { data: dataDish, isLoading, isError } = useQuery({
-        queryKey: ['dish', restaurantId],
-        queryFn: () => getDishes(restaurantId!),
+    const { data: dataOrder, isLoading, isError } = useQuery({
+        queryKey: ['order', restaurantId],
+        queryFn: () => getOrders(restaurantId!),
         enabled: !!restaurantId
     });
     /*if (dataDish){
@@ -140,7 +173,7 @@ export const Dishes = () => {
                     ) : isError ? (
                         <p>Erreur lors du chargement des plats.</p>
                     ) : (
-                        <DataTable columns={columns(deleteDish)} data={dataDish.data || []} pageSize={pageSize} />
+                        <DataTable columns={columns(deleteOrder, updateStateOrder)} data={dataOrder.data || []} pageSize={pageSize} />
                     )}
                 </div>
             </div>

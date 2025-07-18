@@ -298,3 +298,51 @@ export interface ApiResponseOrder {
     updatedAt: Date,
   }
 }
+
+const dishSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  description: z.string(),
+  price: z.number(),
+  categorieId: z.number(),
+  restaurantId: z.number(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
+const itemSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+});
+
+const orderJoinSchema = z.object({
+  orderJoinId: z.number(),
+  orderId: z.number(),
+  menuId: z.number(),
+  dishId: z.number(),
+  nbElement: z.number(),
+  restaurantId: z.number(),
+  menu: z.nullable(z.any()), // Menu est null dans cet exemple
+  dish: dishSchema,
+  item: itemSchema,
+});
+
+const orderSchema = z.object({
+  id: z.number(),
+  sequentialId: z.number(),
+  restaurantId: z.number(),
+  total: z.number(),
+  state: z.string(),
+  tableId: z.number(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  orderJoin: z.array(orderJoinSchema),
+});
+
+const apiResponseOrderByIdSchema = z.object({
+  type: z.literal("success"),
+  data: z.array(orderSchema),
+});
+export type orderJoinType = z.infer<typeof orderJoinSchema>
+export type orderType = z.infer<typeof orderSchema>
+export type apiResponseOrderByIdType = z.infer<typeof apiResponseOrderByIdSchema>

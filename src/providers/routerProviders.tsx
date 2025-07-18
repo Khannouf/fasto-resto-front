@@ -25,6 +25,7 @@ import { CodeConfirm } from "../views/espaceAccueil/codeConfirm";
 import { ForgotPassword } from "../views/espaceAccueil/forgotPassword";
 import Accueil from "../views/espaceAccueil/accueil";
 import RecapAfterOrder from "../views/espaceClient/recapAfterOrder";
+import { Orders } from "../views/espaceAdmin/order";
 
 // Composant qui contient toute la logique
 const AppContent: React.FC = () => {
@@ -52,6 +53,7 @@ const AppContent: React.FC = () => {
           <Route path="schedules" element={<Schedules />} />
           <Route path="tables" element={<TablesView />} />
           <Route path="dishes" element={<Dishes />} />
+          <Route path="order" element={<Orders />} />
           <Route
             path="tables/qrcode/:idResto/:numTable"
             element={<QRCodeGenerator />}

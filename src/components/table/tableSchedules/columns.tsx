@@ -19,10 +19,16 @@ export const columns: ColumnDef<ScheduleDayRow>[] = [
   },
   {
     accessorKey: "start",
+    meta: {
+      label: "Heure de début"
+  },
     header: "Heure de début",
   },
   {
     accessorKey: "end",
+    meta: {
+      label: "Heure de fin"
+  },
     header: "Heure de fin",
   },
   {

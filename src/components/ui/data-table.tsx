@@ -8,6 +8,7 @@ import {
     getSortedRowModel,
     VisibilityState,
     useReactTable,
+    ColumnFiltersState,
 } from "@tanstack/react-table"
 
 import { Button } from "../../components/ui/button"
@@ -40,41 +41,37 @@ export function DataTable<TData, TValue>({
     pageSize,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
-    const [globalFilter, setGlobalFilter] = useState<string>("") // 🔥 État pour la recherche globale
-    const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({})
+    const [globalFilter, setGlobalFilter] = useState<string>("")
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]) // 🆕 ajout du filtre par colonne
 
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
+        getFilteredRowModel: getFilteredRowModel(), // 🆕 nécessaire pour les filtres
         getSortedRowModel: getSortedRowModel(),
-        initialState: {
-            pagination: {
-                pageSize: pageSize,
-            },
-        },
+        onColumnFiltersChange: setColumnFilters, // 🆕 handler
         onColumnVisibilityChange: setColumnVisibility,
         onSortingChange: setSorting,
-        onGlobalFilterChange: setGlobalFilter, // 🔥 Ajout du filtre global
+        onGlobalFilterChange: setGlobalFilter,
         state: {
             sorting,
             globalFilter,
             columnVisibility,
+            columnFilters, // 🆕 state
         },
     });
 
     useEffect(() => {
         table.setPageSize(pageSize);
     }, [pageSize, table]);
-    
 
     return (
         <div>
-            {/* 🔍 Barre de recherche pour filtrer TOUTES les colonnes */}
-            <div className="flex items-center py-4">
+            {/* 🔍 Recherche globale */}
+            <div className="flex items-center py-4 gap-2">
                 <Input
                     placeholder="Rechercher dans tous les champs..."
                     value={globalFilter}
@@ -88,28 +85,23 @@ export function DataTable<TData, TValue>({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter(
-                                (column) => column.getCanHide()
-                            )
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
+                        {table.getAllColumns().filter((column) => column.getCanHide()).map((column) => (
+                            <DropdownMenuCheckboxItem
+                                key={column.id}
+                                className="capitalize"
+                                checked={column.getIsVisible()}
+                                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                            >
+                                {typeof column.columnDef.header === "string"
+                                    ? column.columnDef.header
+                                    : column.columnDef.meta?.label || column.id}
+                            </DropdownMenuCheckboxItem>
+                        ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+
+            {/* 💡 Table */}
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
@@ -119,12 +111,28 @@ export function DataTable<TData, TValue>({
                                     <TableHead key={header.id}>
                                         {header.isPlaceholder
                                             ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                            : (
+                                                <div className="space-y-1">
+                                                    {/* En-tête */}
+                                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                                    {/* 🔍 Input de filtre colonne */}
+                                                    {header.column.getCanFilter() && (
+                                                        <Input
+                                                            type="text"
+                                                            value={(header.column.getFilterValue() ?? "") as string}
+                                                            onChange={(e) => header.column.setFilterValue(e.target.value)}
+                                                            placeholder="Filtrer..."
+                                                            className="h-8 w-full text-sm"
+                                                        />
+                                                    )}
+                                                </div>
+                                            )}
                                     </TableHead>
                                 ))}
                             </TableRow>
                         ))}
                     </TableHeader>
+
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
@@ -146,6 +154,8 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
+
+            {/* 📦 Pagination */}
             <div className="flex items-center justify-end space-x-2 py-4">
                 <Button
                     variant="outline"

@@ -11,6 +11,9 @@ export const columns = (
 ): ColumnDef<Dish>[] => [
         {
             accessorKey: "id",
+            meta: {
+                label: "id"
+            },
             header: ({ column }) => {
                 return (
                     <button
@@ -25,6 +28,9 @@ export const columns = (
         },
         {
             accessorKey: "name",
+            meta: {
+                label: "Nom"
+            },
             header: ({ column }) => {
                 return (
                     <button
@@ -39,6 +45,9 @@ export const columns = (
         },
         {
             accessorKey: "price",
+            meta: {
+                label: "prix"
+            },
             header: ({ column }) => {
                 return (
                     <button
@@ -53,6 +62,9 @@ export const columns = (
         },
         {
             accessorKey: "categorieId",
+            meta: {
+                label: "Catégorie"
+            },
             header: ({ column }) => {
                 return (
                     <button
@@ -67,6 +79,9 @@ export const columns = (
         },
         {
             accessorKey: "description",
+            meta: {
+                label: "description"
+            },
             header: ({ column }) => {
                 return (
                     <button
@@ -81,6 +96,9 @@ export const columns = (
         },
         {
             id: "Ingredients",
+            meta: {
+                label: "Ingrédients"
+            },
             header: ({ column }) => {
                 return (
 
@@ -111,6 +129,9 @@ export const columns = (
         },
         {
             id: "imageUrl",
+            meta: {
+                label: "Image"
+            },
             header: ({ column }) => {
                 return (
 

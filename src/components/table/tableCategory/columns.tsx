@@ -10,6 +10,9 @@ import { ArrowUpDown } from "lucide-react"
 export const columns = (deleteCategory: (id: number) => void): ColumnDef<Categorie>[] => [
     {
         accessorKey: "id",
+        meta: {
+            label: "id"
+        },
         header: ({ column }) => {
             return (
                 <button
@@ -24,6 +27,9 @@ export const columns = (deleteCategory: (id: number) => void): ColumnDef<Categor
     },
     {
         accessorKey: "name",
+        meta: {
+            label: "Nom"
+        },
         header: ({ column }) => {
             return (
                 <button

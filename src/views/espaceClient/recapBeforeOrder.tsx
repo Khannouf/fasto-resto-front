@@ -31,7 +31,7 @@ export const RecapBeforeOrder = () => {
                 body: JSON.stringify(order)
             }).then((res) => res.json()),
         onSuccess: () => {
-            queryClient.invalidateQueries(["categories"]);
+            queryClient.invalidateQueries(["order"]);
         },
 
     })
@@ -68,8 +68,8 @@ export const RecapBeforeOrder = () => {
                 localStorage.setItem("OrderNumber", data.data.sequentialId.toString())
                 localStorage.setItem("OrderId", data.data.id.toString())
 
-                queryClient.invalidateQueries(["categories"]); // refetch
-                navigate(`/order/${params.idResto}/${params.tableId}/recapAfterOrder`
+                queryClient.invalidateQueries(["order"]); // refetch
+                navigate(`/order/${params.idResto}/${params.idTable}/recapAfterOrder`
                 //     , {
                 //     state: {
                 //         orderNumber: data.data.sequentialId,
