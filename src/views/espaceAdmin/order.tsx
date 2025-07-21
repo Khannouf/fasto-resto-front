@@ -64,7 +64,29 @@ export const Orders = () => {
     });
 
     const updateStateOrderMutation = useMutation({
-        mutationFn: async (id: number) => {
+        mutationFn: async ({ id, state, action }: { id: number; state: string; action: string }) => {
+            let newState
+            if (action === "upgrade"){
+                if (state == "a payer") {
+                    newState = "en préparation"
+                } else if( state == "en préparation") {
+                    newState = "prête"
+                } else if( state == "prête") {
+                    newState = "rendu"
+                } else if( state == "rendu") {
+                    newState = "fini"
+                }
+            } else if (action === "downgrade") {
+                if (state == "fini") {
+                    newState = "rendu"
+                } else if( state == "rendu") {
+                    newState = "prête"
+                } else if( state == "prête") {
+                    newState = "en préparation"
+                } else if( state == "en préparation") {
+                    newState = "a payer"
+                }
+            }
             const response = await fetch(`${api}/order/updateState/${id}`, {
                 method: "PATCH",
                 headers: {
@@ -72,7 +94,7 @@ export const Orders = () => {
                     "Content-Type": "application/json", // Ajout du Content-Type pour indiquer un JSON
                 },
                 body: JSON.stringify({
-                    state: "en préparation", // Corps de la requête
+                    state: newState, // Corps de la requête
                 }),
             });
     
@@ -100,8 +122,8 @@ export const Orders = () => {
         },
     });
 
-    const updateStateOrder = (id: number) => {
-        updateStateOrderMutation.mutate(id)
+    const updateStateOrder = (id: number, state: string, action: string) => {
+        updateStateOrderMutation.mutate({id: id, state: state, action: action})
     };
 
 
@@ -138,7 +160,7 @@ export const Orders = () => {
         <>
             <div className="h-screen flex flex-col w-[80vw]">
                 <h1 className="ml-5 mt-5 mb-3 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-3xl">
-                    Plats
+                    Commandes
                 </h1>
                 <div className="w-full flex flex-col md:flex-row md:justify-between items-start md:items-center px-5 gap-2 mb-3">
                     <button
@@ -146,7 +168,7 @@ export const Orders = () => {
                         onClick={() => setShowCard(true)}
                     >
                         <CirclePlus />
-                        Nouvelle Plats
+                        Nouvelle commande
                     </button>
                     <div className="flex items-center">
                         <label className="text-sm font-medium text-gray-700 mr-2">

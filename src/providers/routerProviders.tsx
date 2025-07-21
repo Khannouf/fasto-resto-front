@@ -2,6 +2,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 import Dashboard from "../views/espaceAdmin/dashboard";
 import React from "react";
@@ -33,6 +34,9 @@ const AppContent: React.FC = () => {
   return (
     <>
       <Routes>
+
+      <Route path="/" element={<Navigate to="/accueil" replace />} />
+
         <Route path="/restaurant/:idResto/:idTable" element={<LayoutWithBottomBar />}>
           <Route index element={<FirstStep />} />
           <Route path="menu" element={<RestaurantMenu />} />

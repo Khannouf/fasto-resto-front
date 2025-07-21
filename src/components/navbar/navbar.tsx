@@ -13,11 +13,11 @@ export default function Navbar() {
   return (
     <nav className="bg-white shadow fixed top-0 w-full z-50">
       <div className="container mx-auto flex items-center justify-between p-4">
-        <Link to="/" className="text-2xl font-bold text-gray-800">
+        <Link to="/accueil" className="text-2xl font-bold text-gray-800">
           fastoresto
         </Link>
         <div className="hidden md:flex gap-8">
-          <Link to="/" className="text-gray-700 ">
+          <Link to="/accueil" className="text-gray-700 ">
             Accueil
           </Link>
           {user ? (
@@ -73,7 +73,7 @@ export default function Navbar() {
           >
             <div className="flex flex-col gap-4 p-4">
               <Link
-                to="/"
+                to="/accueil"
                 className="text-gray-700 "
                 onClick={() => setIsOpen(false)}
               >

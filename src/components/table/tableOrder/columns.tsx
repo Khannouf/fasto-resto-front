@@ -3,8 +3,10 @@ import { orderType } from "../../../types/type"
 import { ArrowUpDown, MoreHorizontal, Trash } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu"
 import { Button } from "../../ui/button"
+import { useState } from "react"
+import { CardUpdateOrder } from "../../cardUpdate/cardUpdateOrder"
 
-export const columns = (deleteOrder: (id: number) => void, updateStateOrder: (id: number) => void): ColumnDef<orderType>[] => [
+export const columns = (deleteOrder: (id: number) => void, updateStateOrder: (id: number, state: string, action: string) => void): ColumnDef<orderType>[] => [
     {
         accessorKey: "id",
         meta: {
@@ -124,7 +126,7 @@ export const columns = (deleteOrder: (id: number) => void, updateStateOrder: (id
                 .toLowerCase();
             return textContent.includes(filterValue.toLowerCase());
         },
-    },      
+    },
     {
         accessorKey: "total",
         meta: {
@@ -206,25 +208,50 @@ export const columns = (deleteOrder: (id: number) => void, updateStateOrder: (id
 
             const cat = row.original
 
+            const [showCard, setShowCard] = useState(false);
+
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0 bg-white">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center">
-                        <DropdownMenuItem
-                            onClick={() => deleteOrder(cat.id)}
-                            className="justify-center"
-                        >
-                            <Trash className="text-red-500" />
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => updateStateOrder(cat.id)}>Update</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0 bg-white">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="center">
+                            <DropdownMenuItem
+                                onClick={() => deleteOrder(cat.id)}
+                                className="justify-center"
+                            >
+                                <Trash className="text-red-500" />
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            {cat.state === "fini" ? (
+                                <>
+                                    <DropdownMenuItem onClick={() => updateStateOrder(cat.id, cat.state, "downgrade")}>Passer la commande à l'état précedente</DropdownMenuItem></>
+                            ) : cat.state === "a payer" ? (
+                                <>
+                                    <DropdownMenuItem onClick={() => updateStateOrder(cat.id, cat.state, "upgrade")}>Passer la commande à l'état suivant</DropdownMenuItem>
+                                </>
+                            ) : (
+                                <>
+                                    <DropdownMenuItem onClick={() => updateStateOrder(cat.id, cat.state, "upgrade")}>Passer la commande à l'état suivant</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => updateStateOrder(cat.id, cat.state, "downgrade")}>Passer la commande à l'état précedente</DropdownMenuItem>
+                                </>
+                            )}
+                            <DropdownMenuItem onClick={() => setShowCard(true)}>
+                                Modifier la commande
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    {showCard && (
+                        <CardUpdateOrder
+                            orderId={row.original.id} // Passe l'ID de la commande
+                            onClose={() => setShowCard(false)} // Ferme la carte
+                        />
+                    )}
+                </>
             )
 
         },
