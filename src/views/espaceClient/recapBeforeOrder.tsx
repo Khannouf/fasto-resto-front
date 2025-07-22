@@ -5,7 +5,7 @@ import { useCart } from '../../context/cartContext';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Separator } from '../../components/ui/separator';
 import RecapCardItem from '../../components/recapCardItem';
-import { ApiResponseDish, ApiResponseOrder, orderBodyType } from '../../types/type';
+import {  ApiResponseOrder, orderBodyType } from '../../types/type';
 import { useMutation, useQueryClient } from 'react-query';
 
 const api = import.meta.env.VITE_API_URL;
@@ -69,14 +69,7 @@ export const RecapBeforeOrder = () => {
                 localStorage.setItem("OrderId", data.data.id.toString())
 
                 queryClient.invalidateQueries(["order"]); // refetch
-                navigate(`/order/${params.idResto}/${params.idTable}/recapAfterOrder`
-                //     , {
-                //     state: {
-                //         orderNumber: data.data.sequentialId,
-                //         orderId: data.data.id,
-                //     },
-                // }
-            )
+                navigate(`/order/${params.idResto}/${params.idTable}/recapAfterOrder`);
             },
             onError: (error) => {
                 console.error("Erreur lors de l'ajout :", error);
