@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { apiResponseOrderByIdType, orderJoinType, orderType } from "../../types/type";
 import { useEffect, useState } from "react";
-import { Mosaic } from "react-loading-indicators";
+import { Mosaic, ThreeDot } from "react-loading-indicators";
 import { useQuery } from "react-query";
 import { io } from "socket.io-client";
 
@@ -11,7 +11,7 @@ const api = import.meta.env.VITE_API_URL;
 const RecapAfterOrder = () => {
     const params = useParams();
     const [newData, setNewData] = useState<orderType | null>(null); // Utilisation de useState pour gérer newData
-    
+
     // Récupérer les valeurs du localStorage à l'intérieur du composant
     const [numberOrder, setNumberOrder] = useState<string | null>(null);
     const [orderId, setOrderId] = useState<string | null>(null);
@@ -34,32 +34,32 @@ const RecapAfterOrder = () => {
     };
 
     useEffect(() => {
-      if(!params.idResto || !orderId) return; // Attendre que orderId soit disponible
-      
-      const socketInstance = io(`${api}/orders`, {
-        transports: ["websocket"],
-      })
+        if (!params.idResto || !orderId) return; // Attendre que orderId soit disponible
 
-      socketInstance.emit('joinRestaurant', {
-        restaurantId: parseInt(params.idResto)
-      });
+        const socketInstance = io(`${api}/orders`, {
+            transports: ["websocket"],
+        })
 
-      socketInstance.on('orderStateChanged', (orderData: { id: number; state: string }) => {
-        console.log('Etat de commande changé : ', orderData);
-        if(orderData.id === parseInt(orderId)) {
-            setNewData(prevData => {
-              if (prevData) {
-                return {
-                  ...prevData,
-                  state: orderData.state,
-                };
-              }
-              return prevData;
-            });
-        }
-      });
+        socketInstance.emit('joinRestaurant', {
+            restaurantId: parseInt(params.idResto)
+        });
 
-      // Gestion des erreurs de connexion
+        socketInstance.on('orderStateChanged', (orderData: { id: number; state: string }) => {
+            console.log('Etat de commande changé : ', orderData);
+            if (orderData.id === parseInt(orderId)) {
+                setNewData(prevData => {
+                    if (prevData) {
+                        return {
+                            ...prevData,
+                            state: orderData.state,
+                        };
+                    }
+                    return prevData;
+                });
+            }
+        });
+
+        // Gestion des erreurs de connexion
         socketInstance.on('connect_error', (error) => {
             console.error('Erreur de connexion Socket.IO:', error);
         });
@@ -74,8 +74,8 @@ const RecapAfterOrder = () => {
 
         return () => {
             if (socketInstance) {
-                socketInstance.emit('leaveRestaurant', { 
-                    restaurantId: parseInt(params.idResto!) 
+                socketInstance.emit('leaveRestaurant', {
+                    restaurantId: parseInt(params.idResto!)
                 });
                 socketInstance.disconnect();
             }
@@ -109,15 +109,15 @@ const RecapAfterOrder = () => {
     const getStateColor = (state: string) => {
         switch (state) {
             case "a payer":
-                return "bg-yellow-100 text-yellow-800";
+                return "bg-red-100 text-red-800";
             case "en préparation":
                 return "bg-blue-100 text-blue-800";
             case "prête":
-                return "bg-orange-100 text-orange-800";
+                return "bg-green-100 text-green-800";
             case "rendu":
                 return "bg-purple-100 text-purple-800";
             case "fini":
-                return "bg-green-100 text-green-800";
+                return "bg-gray-100 text-gray-800";
             default:
                 return "bg-gray-100 text-gray-800";
         }
@@ -125,7 +125,7 @@ const RecapAfterOrder = () => {
 
     if (newData) {
         console.log('etat actuel de la commande : ' + newData.state);
-        
+
         return (
             <div className="min-h-screen bg-red-500 flex items-center justify-center">
                 <motion.div
@@ -144,9 +144,24 @@ const RecapAfterOrder = () => {
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.3 }}
-                        className={`text-center text-sm font-semibold py-2 px-4 rounded-full mb-4 ${getStateColor(newData.state)}`}
+                        className={`text-center text-sm font-semibold py-2 px-4 rounded-full mb-4 ${getStateColor(newData.state)} flex items-center justify-center`}
                     >
                         {newData.state.toUpperCase()}
+                        {newData.state === "en préparation" ? (
+                            <div className="inline-block scale-50">
+                                <ThreeDot color="#1E40AF" size="small" text="" textColor="" />
+                            </div>
+                        ) : newData.state === "prête" ? (
+                            <div className="inline-block ml-2">
+                                <img
+                                    src="/system-regular-31-check-hover-check.gif" // Remplacez par l'URL correcte de votre GIF
+                                    alt="Ready"
+                                    className="w-7 h-7" // Ajuste la taille pour correspondre à ThreeDot
+                                />
+                            </div>
+                        ) : (
+                            <></>
+                        )}
                     </motion.div>
                     <div className="space-y-4 max-h-64 overflow-y-auto">
                         {newData.orderJoin.map((joinItem: orderJoinType, index: number) => (
@@ -165,9 +180,8 @@ const RecapAfterOrder = () => {
                         <span>Total :</span>
                         <span>{newData.total} €</span>
                     </div>
-                    {newData.state === ""}
                 </motion.div>
-            </div>
+            </div >
         );
     }
 
